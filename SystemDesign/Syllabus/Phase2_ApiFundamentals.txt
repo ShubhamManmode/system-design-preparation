@@ -49,8 +49,8 @@
         Claims
 
     7. API Security
-        HTTPS
-        CORS
+        HTTPS --
+        CORS  -- cross origin resource sharing , 
         CSRF
         XSS
         SQL Injection
