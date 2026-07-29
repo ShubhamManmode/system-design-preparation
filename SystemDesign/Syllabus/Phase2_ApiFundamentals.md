@@ -58,12 +58,12 @@
         Rate Limiting
 
     8. API Communication
-        REST
-        GraphQL
-        gRPC
-        WebSockets
-        Server-Sent Events (SSE)
-        Webhooks
+        REST - [https://restfulapi.net/](https://restfulapi.net/)
+        GraphQL - [https://graphql.org/learn/](https://graphql.org/learn/)
+        gRPC - [https://grpc.io/docs/what-is-grpc/](https://grpc.io/docs/what-is-grpc/)
+        WebSockets - [https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
+        Server-Sent Events (SSE) - [https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)
+        Webhooks - [https://www.twilio.com/en-us/blog/what-are-webhooks-and-how-do-they-work](https://www.twilio.com/en-us/blog/what-are-webhooks-and-how-do-they-work)
 
     9. Reliability
         Idempotency
