@@ -73,18 +73,6 @@
    - Correlation ID
    - Request Tracing
 
-10. Documentation
-   - OpenAPI (Swagger)
-   - API Contracts
-   - SDK Generation
-
-11. Implementations
-   - ASP.NET Core Web API
-   - Minimal APIs
-   - FastAPI
-   - Spring Boot
-   - Express.js
-   - API Gateway
 
 12. Patterns
    - Backend for Frontend (BFF)
@@ -94,15 +82,6 @@
    - Strangler Fig
    - Request-Reply
    - Async Request-Response
-
-13. Best Practices
-   - Naming Conventions
-   - Error Handling
-   - Validation
-   - Pagination
-   - Caching
-   - Versioning
-   - Rate Limiting
 
 14. Real-world Examples
    - GitHub API
