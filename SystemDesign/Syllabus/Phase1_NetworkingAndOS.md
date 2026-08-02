@@ -52,6 +52,8 @@
             DNS Records
             TTL
             DNS Caching
+            CDN (Content Delivery Network)
+            Resource: ../Resources/Networking/DNS_and_CDN.md
         
         1.7 Proxy/Reverse Proxy
 
