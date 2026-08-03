@@ -14,14 +14,7 @@
             Health Checks
             Sticky Sessions
             SSL Termination
-        Implementations
-            NGINX
-            HAProxy
-            Envoy
-            AWS ALB
-            AWS NLB
-            Azure Load Balancer
-            Azure Application Gateway
+
         Patterns
             Active-Active
             Active-Passive
@@ -35,12 +28,7 @@
             SSL Termination
             Compression
             URL Rewriting
-            Caching
-        Implementations
-            NGINX
-            Envoy
-            Traefik
-            Apache
+       
         Patterns
             API Gateway
             Edge Proxy
@@ -85,7 +73,6 @@
         Implementations
             Redis
             Memcached
-            Caffeine
 
     5. Message Queue
         Fundamentals
@@ -95,12 +82,7 @@
         Ordering
         Retry
         Dead Letter Queue
-        Implementations
-            Kafka
-            RabbitMQ
-            ActiveMQ
-            Azure Service Bus
-            AWS SQS
+        
         Patterns
             Event-Driven Architecture
             Producer-Consumer
@@ -116,6 +98,7 @@
         Tokenization
         Stemming
         Fuzzy Search
+       
         Implementations
             Elasticsearch
             OpenSearch
@@ -128,25 +111,6 @@
             Amazon Search
             Google Search
             LinkedIn Search
-        Interview Problems
-
-    7. Object Storage
-        Fundamentals
-        Internal Working
-        Object Model
-        Metadata
-        Versioning
-        Multipart Upload
-        Lifecycle Policies
-        Implementations
-            Amazon S3
-            Azure Blob Storage
-            Google Cloud Storage
-            MinIO
-        Patterns
-            Data Lake
-            Backup Storage
-            Static Asset Storage
 
     8. Rate Limiter
         Fundamentals

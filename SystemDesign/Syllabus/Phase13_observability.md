@@ -38,12 +38,6 @@
         SLO-based Alerts
         Incident Management
 
-    7. Reliability Metrics
-        SLI
-        SLO
-        SLA
-        Error Budget
-
     8. Health Monitoring
         Liveness Probe
         Readiness Probe

@@ -90,11 +90,3 @@
         Least Privilege
         Secure by Default
         Token-Based Authentication
-
-    14. Real-world Examples
-        Google
-        Microsoft
-        AWS
-        Stripe
-
-    15. Interview Problems

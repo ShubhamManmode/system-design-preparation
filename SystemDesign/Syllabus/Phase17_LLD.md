@@ -122,13 +122,6 @@
         Clean Code
         Naming Conventions
 
-    12. Implementations
-        C#
-        ASP.NET Core
-        Entity Framework Core
-        MediatR
-        AutoMapper
-        FluentValidation
 
     13. Design Exercises
         Parking Lot
