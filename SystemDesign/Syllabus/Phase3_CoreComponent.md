@@ -26,11 +26,6 @@
             Active-Active
             Active-Passive
             Global Load Balancing
-        Real-world Examples
-            Netflix
-            YouTube
-            Amazon
-        Interview Problems
 
     2. Reverse Proxy
         Fundamentals
@@ -50,10 +45,6 @@
             API Gateway
             Edge Proxy
             Sidecar Proxy
-        Real-world Examples
-            Kubernetes Ingress
-            Cloudflare
-        Interview Problems
 
     3. CDN
         Fundamentals
@@ -73,11 +64,6 @@
             Edge Caching
             Geo Distribution
             Origin Shield
-        Real-world Examples
-            Netflix
-            YouTube
-            Instagram
-        Interview Problems
 
     4. Caching
         Fundamentals
@@ -100,10 +86,6 @@
             Redis
             Memcached
             Caffeine
-        Real-world Examples
-            Facebook Feed
-            Twitter Timeline
-        Interview Problems
 
     5. Message Queue
         Fundamentals
@@ -124,11 +106,7 @@
             Producer-Consumer
             Fan-Out
             Event Sourcing
-        Real-world Examples
-            Uber
-            Netflix
-            LinkedIn
-        Interview Problems
+
 
     6. Search Engine
         Fundamentals
@@ -169,11 +147,6 @@
             Data Lake
             Backup Storage
             Static Asset Storage
-        Real-world Examples
-            Dropbox
-            Google Photos
-            Netflix Media Storage
-        Interview Problems
 
     8. Rate Limiter
         Fundamentals
@@ -212,12 +185,7 @@
             Batch Processing
             Periodic Jobs
             Delayed Jobs
-        Real-world Examples
-            Billing
-            Email Scheduler
-            Report Generation
-        Interview Problems
-
+ 
     10. Notification System
         Fundamentals
         Internal Working
