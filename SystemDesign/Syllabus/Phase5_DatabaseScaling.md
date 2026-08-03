@@ -69,11 +69,3 @@
         Google Cloud SQL
         CockroachDB
         YugabyteDB
-
-    12. Real-world Examples
-        Netflix
-        Amazon
-        Uber
-        Instagram
-
-    13. Interview Problems
