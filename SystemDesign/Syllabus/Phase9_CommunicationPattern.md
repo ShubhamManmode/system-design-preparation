@@ -79,15 +79,6 @@
         Authentication
         Authorization
 
-    13. Implementations
-        REST API
-        gRPC
-        Kafka
-        RabbitMQ
-        Azure Service Bus
-        Amazon SQS
-        Amazon SNS
-        Azure Event Hub
 
     14. Design Patterns
         Request-Reply

@@ -83,11 +83,6 @@
         mTLS
         Secrets Management
 
-    12. Deployment
-        Blue-Green Deployment
-        Canary Deployment
-        Rolling Deployment
-        Feature Flags
 
     13. Implementations
         ASP.NET Core
