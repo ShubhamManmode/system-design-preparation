@@ -1,173 +1,136 @@
-﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
-> Topic: System Design Notes
-> Docs Index: [README.md](README.md)
-Scalability
+# Scalability
 
 Goal: Understand how systems handle increasing traffic, users, and data while maintaining performance and availability.
 
-â¸»
+---
 
-Table of Contents
+## Table of Contents
 
-1. What is Scalability?
-2. Why Scalability is Important
-3. Vertical Scaling (Scale Up)
-4. Horizontal Scaling (Scale Out)
-5. Stateless vs Stateful Applications
-6. Elasticity
-7. Auto Scaling
-8. Scaling Strategies
-    * Compute Scaling
-    * Storage Scaling
-    * Read Scaling
-    * Write Scaling
-9. Real-World Architecture
-10. Interview Questions
-11. Cheat Sheet
+1. [What is Scalability?](#what-is-scalability)
+2. [Why Scalability Matters](#why-scalability-matters)
+3. [Vertical Scaling (Scale Up)](#vertical-scaling-scale-up)
+4. [Horizontal Scaling (Scale Out)](#horizontal-scaling-scale-out)
+5. [Stateless vs Stateful Applications](#stateless-vs-stateful-applications)
+6. [Elasticity](#elasticity)
+7. [Auto Scaling](#auto-scaling)
+8. [Scaling Strategies](#scaling-strategies)
+   - Compute Scaling
+   - Storage Scaling
+   - Read Scaling
+   - Write Scaling
+9. [Real-World Architecture](#real-world-architecture)
+10. [Interview Questions](#interview-questions)
+11. [Cheat Sheet](#cheat-sheet)
 
-â¸»
+---
 
-What is Scalability?
+## What is Scalability?
 
-Definition
+**Definition**
 
 Scalability is the ability of a system to handle increasing workload without significantly affecting performance.
 
 The workload may increase because of:
 
-* More users
-* More requests
-* More data
-* More transactions
-* More services
+- More users
+- More requests
+- More data
+- More transactions
+- More services
 
 A scalable system should continue to provide acceptable response times even as demand grows.
 
-â¸»
-
-Example
+**Example**
 
 Suppose an e-commerce website receives:
 
-* Day 1 â†’ 1,000 users/day
-* Festival Sale â†’ 2 million users/day
+- Day 1 → 1,000 users/day
+- Festival Sale → 2,000,000 users/day
 
 If the application continues serving users without crashing or slowing down dramatically, it is considered scalable.
 
-â¸»
+---
 
-Why Scalability Matters
+## Why Scalability Matters
 
 Without scalability:
 
-* High response times
-* Server crashes
-* Database overload
-* Poor customer experience
-* Revenue loss
+- High response times
+- Server crashes
+- Database overload
+- Poor customer experience
+- Revenue loss
 
 With scalability:
 
-* Better performance
-* High availability
-* Improved user experience
-* Ability to handle traffic spikes
-* Lower operational risk
+- Better performance
+- High availability
+- Improved user experience
+- Ability to handle traffic spikes
+- Lower operational risk
 
-â¸»
+---
 
-Vertical Scaling (Scale Up)
+## Vertical Scaling (Scale Up)
 
-Definition
+**Definition**
 
 Vertical scaling means increasing the capacity of an existing server by adding more hardware resources.
 
 Examples:
 
-* More CPU
-* More RAM
-* Faster SSD
-* Better Network
+- More CPU
+- More RAM
+- Faster SSD
+- Better network
 
-â¸»
+**Architecture (conceptual)**
 
-Architecture
+Before:
+- Application on a server (4 CPU, 8 GB RAM)
 
-Before
-Application
-4 CPU
-8 GB RAM
-â†“
-After Scale Up
-Application
-32 CPU
-128 GB RAM
+After scale up:
+- Application on a more powerful server (32 CPU, 128 GB RAM)
 
-â¸»
+**How it works**
 
-How It Works
+Instead of adding more machines, the same machine becomes more powerful. The application continues running on a single server.
 
-Instead of adding more machines, the same machine becomes more powerful.
+**Advantages**
 
-The application continues running on a single server.
+- Simple implementation
+- No code changes
+- No load balancer required
+- Easier maintenance
+- Suitable for monolithic applications
 
-â¸»
+**Disadvantages**
 
-Advantages
+- Hardware limits
+- Expensive upgrades
+- Single point of failure
+- Downtime during upgrades (in many environments)
 
-* Simple implementation
-* No code changes
-* No load balancer required
-* Easier maintenance
-* Suitable for monolithic applications
+**Real example**
 
-â¸»
+A startup launches with 2 CPU and 4 GB RAM. As traffic increases, the server is upgraded to 16 CPU and 64 GB RAM.
 
-Disadvantages
+**Best use cases**
 
-* Hardware limit
-* Expensive upgrades
-* Single point of failure
-* Downtime during upgrades (in many environments)
+- Small applications
+- Internal tools
+- Development environments
+- Early-stage startups
 
-â¸»
+---
 
-Real Example
+## Horizontal Scaling (Scale Out)
 
-A startup launches with:
+**Definition**
 
-* 2 CPU
-* 4 GB RAM
+Horizontal scaling means adding more servers to distribute the workload. Instead of making one server larger, multiple servers work together.
 
-Traffic increases.
-
-Instead of changing architecture, the server is upgraded to:
-
-* 16 CPU
-* 64 GB RAM
-
-â¸»
-
-Best Use Cases
-
-* Small applications
-* Internal tools
-* Development environments
-* Early-stage startups
-
-â¸»
-
-Horizontal Scaling (Scale Out)
-
-Definition
-
-Horizontal scaling means adding more servers to distribute the workload.
-
-Instead of making one server larger, multiple servers work together.
-
-â¸»
-
-Architecture
+**Architecture (conceptual)**
 
                Load Balancer
           /        |        \
@@ -175,478 +138,290 @@ Architecture
                |
             Database
 
-â¸»
+**How it works**
 
-How It Works
+Incoming requests first reach the load balancer, which distributes requests among available servers. Each server processes only a portion of the total traffic.
 
-Incoming requests first reach the load balancer.
+**Advantages**
 
-The load balancer distributes requests among available servers.
+- Almost unlimited growth
+- High availability
+- Fault tolerance
+- Better reliability
+- Zero-downtime deployments (possible)
 
-Each server processes only a portion of the total traffic.
+**Disadvantages**
 
-â¸»
+- More complex architecture
+- Requires load balancing
+- Data synchronization challenges
+- Session management becomes more difficult
 
-Advantages
+**Real examples**
 
-* Almost unlimited growth
-* High availability
-* Fault tolerance
-* Better reliability
-* Zero-downtime deployments
+- Netflix
+- Amazon
+- Google
+- Facebook
+- Uber
 
-â¸»
+These companies run thousands of application servers instead of relying on a single giant machine.
 
-Disadvantages
+---
 
-* More complex architecture
-* Requires load balancing
-* Data synchronization challenges
-* Session management becomes difficult
+## Vertical vs Horizontal Scaling
 
-â¸»
+| Feature            | Vertical Scaling     | Horizontal Scaling        |
+|--------------------|----------------------|---------------------------|
+| Add resources      | CPU / RAM            | More servers              |
+| Maximum limit      | Hardware limit       | Nearly unlimited          |
+| Cost               | Expensive hardware   | Commodity servers         |
+| Downtime           | Often required       | Usually not required      |
+| Fault tolerance    | Low                  | High                      |
+| Complexity         | Low                  | High                      |
+| Best for           | Small apps           | Large distributed systems |
 
-Real Examples
+---
 
-* Netflix
-* Amazon
-* Google
-* Facebook
-* Uber
+## Stateless vs Stateful Applications
 
-These companies run thousands of application servers instead of one giant machine.
+### Stateless
 
-â¸»
+A stateless application does not store user-specific information between requests. Each request contains everything needed to process it.
 
-Vertical vs Horizontal Scaling
+Advantages:
 
-Feature	Vertical Scaling	Horizontal Scaling
-Add Resources	CPU/RAM	More Servers
-Maximum Limit	Hardware Limit	Nearly Unlimited
-Cost	Expensive Hardware	Commodity Servers
-Downtime	Often Required	Usually Not Required
-Fault Tolerance	Low	High
-Complexity	Low	High
-Best For	Small Apps	Large Distributed Systems
+- Easy horizontal scaling
+- Easy load balancing
+- Better fault tolerance
+- Simple deployments
 
-â¸»
+Examples:
 
-Stateless vs Stateful Applications
+- REST APIs
+- Public APIs
+- Authentication using JWT
+- Search services
 
-â¸»
+### Stateful
 
-Stateless
+A stateful application stores information between requests (e.g., login session, shopping cart in server memory, multiplayer game session).
 
-A stateless application does not store user-specific information between requests.
+Problems:
 
-Each request contains everything needed to process it.
+- If a request goes to another server, session can be lost
+- User might be logged out or shopping cart might disappear
 
-User
-â†“
-Server
-â†“
-Response
-(Server forgets everything)
+Solutions:
 
-Advantages
+- Redis session store
+- Sticky sessions
+- Distributed cache
+- Database-backed sessions
 
-* Easy horizontal scaling
-* Easy load balancing
-* Better fault tolerance
-* Simple deployments
+### Stateless vs Stateful (comparison)
 
-â¸»
+| Feature           | Stateless | Stateful |
+|-------------------|-----------|----------|
+| Session           | No        | Yes      |
+| Easy scaling      | Yes       | Difficult|
+| Load balancer     | Simple    | Sticky sessions often needed |
+| Failure recovery  | Easy      | Difficult|
+| Cloud native      | Yes       | Limited  |
 
-Examples
+---
 
-* REST APIs
-* Public APIs
-* Authentication using JWT
-* Search services
+## Elasticity
 
-â¸»
+**Definition**
 
-Stateful
+Elasticity is the ability of a system to automatically increase or decrease resources based on current demand. Unlike scalability, elasticity focuses on automatic adaptation.
 
-A stateful application stores information between requests.
+**Example**
 
-Examples include:
-
-* Login session
-* Shopping cart in server memory
-* Multiplayer game session
-
-User
-â†“
-Server
-(Session Stored)
-â†“
-Next Request
-â†“
-Same Server Required
-
-â¸»
-
-Problems
-
-If the request goes to another server:
-
-* Session lost
-* User logged out
-* Shopping cart disappears
-
-â¸»
-
-Solutions
-
-* Redis Session Store
-* Sticky Sessions
-* Distributed Cache
-* Database-backed sessions
-
-â¸»
-
-Stateless vs Stateful
-
-Feature	Stateless	Stateful
-Session	No	Yes
-Easy Scaling	Yes	Difficult
-Load Balancer	Simple	Sticky Sessions Needed
-Failure Recovery	Easy	Difficult
-Cloud Native	Yes	Limited
-
-â¸»
-
-Elasticity
-
-Definition
-
-Elasticity is the ability of a system to automatically increase or decrease resources based on current demand.
-
-Unlike scalability, elasticity focuses on automatic adaptation.
-
-â¸»
-
-Example
-
-Morning:
-
-10 Servers
-
-Afternoon Sale:
-
-100 Servers
-
-Midnight:
-
-8 Servers
+- Morning: 10 servers
+- Afternoon sale: 100 servers
+- Midnight: 8 servers
 
 Resources are added and removed automatically.
 
-â¸»
+**Benefits**
 
-Benefits
+- Reduced infrastructure cost
+- Better resource utilization
+- Handles unpredictable traffic
+- Supports cloud-native applications
 
-* Reduced infrastructure cost
-* Better resource utilization
-* Handles unpredictable traffic
-* Supports cloud-native applications
+---
 
-â¸»
+## Auto Scaling
 
-Auto Scaling
-
-Definition
+**Definition**
 
 Auto Scaling automatically adds or removes servers based on predefined metrics.
 
 Common metrics include:
 
-* CPU utilization
-* Memory usage
-* Number of requests
-* Queue length
-* Network traffic
-* Custom business metrics
+- CPU utilization
+- Memory usage
+- Number of requests
+- Queue length
+- Network traffic
+- Custom business metrics
 
-â¸»
+**Workflow (example)**
 
-Workflow
+- CPU > 80% → monitoring detects threshold → launch new instance → register with load balancer → traffic distributed
 
-CPU > 80%
-â†“
-Monitoring detects threshold
-â†“
-Launch New Instance
-â†“
-Register with Load Balancer
-â†“
-Traffic Distributed
-
-â¸»
-
-Scale In
+**Scale in**
 
 When traffic decreases:
 
-Low CPU
-â†“
-Terminate Extra Servers
-â†“
-Reduce Cost
+- Low CPU → terminate extra servers → reduce cost
 
-â¸»
+**Cloud services**
 
-Cloud Services
+- AWS Auto Scaling
+- Azure VM Scale Sets
+- Google Managed Instance Groups
+- Kubernetes Horizontal Pod Autoscaler (HPA)
 
-* AWS Auto Scaling
-* Azure VM Scale Sets
-* Google Managed Instance Groups
-* Kubernetes Horizontal Pod Autoscaler (HPA)
+---
 
-â¸»
+## Scaling Strategies
 
-Scaling Strategies
+### 1. Compute Scaling
 
-â¸»
+Purpose: Increase processing capacity.
 
-1. Compute Scaling
+- Vertical: Increase CPU, RAM, faster processors
+- Horizontal: Add more application servers behind a load balancer
 
-Purpose
+Used for:
 
-Increase processing capacity.
+- APIs
+- Web servers
+- Background workers
+- AI inference
+- Batch jobs
 
-â¸»
+### 2. Storage Scaling
 
-Vertical
+Purpose: Handle increasing amounts of data.
 
-Increase:
+- Vertical: Increase capacity of one database server (e.g., 1 TB → 8 TB SSD)
+- Horizontal: Distribute data across multiple storage nodes using sharding, distributed file systems, object storage
 
-* CPU
-* RAM
-* Faster processors
+Examples:
 
-â¸»
+- Amazon S3
+- Azure Blob Storage
+- Google Cloud Storage
+- HDFS
 
-Horizontal
+### 3. Read Scaling
 
-Add more application servers.
+Problem: Too many read requests overload the primary database.
 
-Load Balancer
-â†“
-10 Application Servers
-
-â¸»
-
-Used For
-
-* APIs
-* Web Servers
-* Background Workers
-* AI Inference
-* Batch Jobs
-
-â¸»
-
-2. Storage Scaling
-
-Purpose
-
-Handle increasing amounts of data.
-
-â¸»
-
-Vertical
-
-Increase storage capacity of one database server.
-
-Example:
-
-1 TB â†’ 8 TB SSD
-
-â¸»
-
-Horizontal
-
-Distribute data across multiple storage nodes.
-
-Techniques:
-
-* Sharding
-* Distributed File Systems
-* Object Storage
-
-â¸»
-
-Examples
-
-* Amazon S3
-* Azure Blob Storage
-* Google Cloud Storage
-* HDFS
-
-â¸»
-
-3. Read Scaling
-
-Problem
-
-Too many read requests overload the primary database.
-
-â¸»
-
-Solution
-
-Use Read Replicas.
+Solution: Use read replicas.
 
             Primary Database
              /     |      \
       Replica1 Replica2 Replica3
 
 Applications send:
+- Writes → Primary
+- Reads → Replicas
 
-* Writes â†’ Primary
-* Reads â†’ Replicas
+Benefits:
 
-â¸»
+- Higher throughput
+- Lower latency
+- Reduced load on primary
 
-Benefits
+Challenges:
 
-* Higher throughput
-* Lower latency
-* Reduced load on primary
+- Replication lag
+- Eventual consistency
+- Read-after-write issues
 
-â¸»
+### 4. Write Scaling
 
-Challenges
+Problem: A single database becomes a bottleneck for write operations.
 
-* Replication lag
-* Eventual consistency
-* Read-after-write issues
+Techniques:
 
-â¸»
+- Database sharding (e.g., shard users A–M → shard 1, N–Z → shard 2)
+- Partitioning large tables into smaller partitions
+- Event queue (Client → Kafka → Consumers → Database) to process writes asynchronously
+- CQRS: separate read and write models for independent scaling
 
-4. Write Scaling
+Challenges:
 
-Problem
+- Cross-shard joins
+- Transactions and data consistency
+- Operational complexity
 
-A single database eventually becomes a bottleneck for write operations.
+---
 
-â¸»
+## Real-World Architecture (evolution path)
 
-Techniques
+Suppose an application grows from 1,000 users to 50 million users. Typical steps:
 
-Database Sharding
-
-User A-M
-â†“
-Shard 1
-User N-Z
-â†“
-Shard 2
-
-â¸»
-
-Partitioning
-
-Split large tables into smaller partitions.
-
-â¸»
-
-Event Queue
-
-Client
-â†“
-Kafka
-â†“
-Consumers
-â†“
-Database
-
-Writes are processed asynchronously.
-
-â¸»
-
-CQRS
-
-Separate read and write models.
-
-* Optimized writes
-* Optimized reads
-* Independent scaling
-
-â¸»
-
-Challenges
-
-* Cross-shard joins
-* Transactions
-* Data consistency
-* Operational complexity
-
-â¸»
-
-Real-World Example
-
-Suppose an application grows from 1,000 users to 50 million users.
-
-1. Upgrade server (Vertical Scaling)
-2. Add Load Balancer
-3. Add multiple application servers (Horizontal Scaling)
+1. Upgrade server (vertical scaling)
+2. Add a load balancer
+3. Add multiple application servers (horizontal scaling)
 4. Make APIs stateless
 5. Store sessions in Redis
-6. Enable Auto Scaling
+6. Enable auto scaling
 7. Add database replicas for reads
 8. Shard database for writes
 9. Store images in object storage
 10. Use distributed caching (Redis)
-11. Introduce asynchronous messaging (Kafka/RabbitMQ)
+11. Introduce asynchronous messaging (Kafka / RabbitMQ)
 
 This is a common evolution path for large-scale internet applications.
 
-â¸»
+---
 
-Interview Questions
+## Interview Questions
 
-Basic
+**Basic**
 
-* What is scalability?
-* Difference between scalability and elasticity?
-* Vertical vs horizontal scaling?
-* Why are stateless applications easier to scale?
-* What is auto scaling?
+- What is scalability?
+- Difference between scalability and elasticity?
+- Vertical vs horizontal scaling?
+- Why are stateless applications easier to scale?
+- What is auto scaling?
 
-â¸»
+**Intermediate**
 
-Intermediate
+- How would you scale an application from 10,000 to 10 million users?
+- When would you choose vertical scaling over horizontal scaling?
+- How do read replicas improve scalability?
+- What is replication lag?
 
-* How would you scale an application from 10,000 to 10 million users?
-* When would you choose vertical scaling over horizontal scaling?
-* How do read replicas improve scalability?
-* What is replication lag?
+**Advanced**
 
-â¸»
+- How do companies like Netflix scale globally?
+- Explain write scaling in distributed databases.
+- How would you eliminate a database bottleneck?
+- How would you scale a stateful application?
 
-Advanced
+---
 
-* How do companies like Netflix scale globally?
-* Explain write scaling in distributed databases.
-* How would you eliminate a database bottleneck?
-* How would you scale a stateful application?
+## Cheat Sheet
 
-â¸»
-
-Cheat Sheet
-
-Topic	Key Takeaway
-Scalability	Ability to handle increased workload
-Vertical Scaling	Add CPU/RAM to one server
-Horizontal Scaling	Add more servers
-Stateless	No session stored on server; easy to scale
-Stateful	Session stored on server; harder to scale
-Elasticity	Automatically adjust resources
-Auto Scaling	Automatically add/remove instances
-Compute Scaling	Increase processing power
-Storage Scaling	Increase storage capacity
-Read Scaling	Use replicas to serve reads
-Write Scaling	Use sharding, partitioning, queues, CQRS
+| Topic           | Key Takeaway |
+|-----------------|--------------|
+| Scalability     | Ability to handle increased workload |
+| Vertical Scaling| Add CPU / RAM to one server |
+| Horizontal Scaling | Add more servers |
+| Stateless       | No session stored on server; easy to scale |
+| Stateful        | Session stored on server; harder to scale |
+| Elasticity      | Automatically adjust resources |
+| Auto Scaling    | Automatically add/remove instances |
+| Compute Scaling | Increase processing power |
+| Storage Scaling | Increase storage capacity |
+| Read Scaling    | Use replicas to serve reads |
+| Write Scaling   | Use sharding, partitioning, queues, CQRS |
