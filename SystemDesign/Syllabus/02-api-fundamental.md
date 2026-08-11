@@ -1,4 +1,12 @@
-# API Design
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Syllabus Chapter
+> Docs Index: [README.md](../../README.md)
+
+# API Fundamentals
+
+This chapter focuses on API design principles, REST concepts, and communication patterns used in distributed systems.
+
+## 1. API Fundamentals
 
 1. API Fundamentals
    - What is an API?
@@ -50,7 +58,7 @@
 
 7. API Security
    - HTTPS
-   - CORS — cross-origin resource sharing
+   - CORS â€” cross-origin resource sharing
    - CSRF
    - XSS
    - SQL Injection

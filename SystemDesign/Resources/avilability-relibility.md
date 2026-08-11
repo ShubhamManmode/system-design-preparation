@@ -1,3 +1,6 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: System Design Notes
+> Docs Index: [README.md](README.md)
 4. Availability
 
 What is Availability?
@@ -14,7 +17,7 @@ System is available for 99.9% of the time
 
 This means the system can be unavailable for approximately 0.1% of the measurement period.
 
-⸻
+â¸»
 
 4.1 Availability Percentage
 
@@ -24,13 +27,13 @@ The basic formula is:
 
 Availability
 =
-(Uptime / Total Time) × 100
+(Uptime / Total Time) Ã— 100
 
 Another equivalent form:
 
 Availability
 =
-((Total Time - Downtime) / Total Time) × 100
+((Total Time - Downtime) / Total Time) Ã— 100
 
 Example:
 
@@ -40,9 +43,9 @@ Downtime   = 43.2 minutes
 Then:
 
 Availability
-≈ 99.9%
+â‰ˆ 99.9%
 
-⸻
+â¸»
 
 Availability Table
 
@@ -78,9 +81,9 @@ to:
 
 52.56 minutes
 
-That’s a significant engineering difference.
+Thatâ€™s a significant engineering difference.
 
-⸻
+â¸»
 
 4.2 Availability Example
 
@@ -103,14 +106,14 @@ Uptime:
 
 Availability:
 
-719.5 / 720 × 100
-≈ 99.93%
+719.5 / 720 Ã— 100
+â‰ˆ 99.93%
 
 Therefore:
 
-Availability ≈ 99.93%
+Availability â‰ˆ 99.93%
 
-⸻
+â¸»
 
 4.3 High Availability (HA)
 
@@ -149,14 +152,14 @@ we can introduce redundancy:
 
 If API Server 1 fails:
 
-API Server 1 ❌
-API Server 2 ✅
+API Server 1 âŒ
+API Server 2 âœ…
 
 The load balancer sends traffic to Server 2.
 
 The system continues operating.
 
-⸻
+â¸»
 
 4.4 High Availability Techniques
 
@@ -174,7 +177,7 @@ Instead of:
 
 Single Server
 
-⸻
+â¸»
 
 2. Load Balancing
 
@@ -187,13 +190,13 @@ Distribute requests across multiple servers.
 
 If one server fails:
 
-API1 ❌
-API2 ✅
-API3 ✅
+API1 âŒ
+API2 âœ…
+API3 âœ…
 
 Traffic continues through the healthy instances.
 
-⸻
+â¸»
 
 3. Database Replication
 
@@ -206,7 +209,7 @@ Maintain multiple copies of database data.
 
 If the primary fails, another database can potentially take over depending on the database architecture.
 
-⸻
+â¸»
 
 4. Multi-AZ Deployment
 
@@ -228,13 +231,13 @@ Region
 
 If one availability zone fails:
 
-AZ1 ❌
-AZ2 ✅
-AZ3 ✅
+AZ1 âŒ
+AZ2 âœ…
+AZ3 âœ…
 
 the application can continue serving traffic.
 
-⸻
+â¸»
 
 5. Multi-Region Deployment
 
@@ -251,7 +254,7 @@ For stronger resilience:
 
 If an entire region becomes unavailable, traffic can potentially be redirected to another region.
 
-⸻
+â¸»
 
 4.5 Availability vs Scalability
 
@@ -264,9 +267,9 @@ Can the system handle increasing load?
 Example:
 
 10K RPS
-   ↓
+   â†“
 20K RPS
-   ↓
+   â†“
 50K RPS
 
 Availability
@@ -275,9 +278,9 @@ Does the system remain operational when components fail?
 
 Example:
 
-Server 1 ❌
-Server 2 ✅
-Server 3 ✅
+Server 1 âŒ
+Server 2 âœ…
+Server 3 âœ…
 System remains available.
 
 A system can be:
@@ -288,7 +291,7 @@ or:
 
 Highly available but not highly scalable
 
-⸻
+â¸»
 
 4.6 SLA
 
@@ -312,7 +315,7 @@ SLA = 99.9% monthly availability
 
 The provider commits to meeting that availability target under the agreement.
 
-⸻
+â¸»
 
 SLA Example
 
@@ -334,7 +337,7 @@ Compensation
 
 depending on the agreement.
 
-⸻
+â¸»
 
 4.7 SLO
 
@@ -356,7 +359,7 @@ SLO:
 
 SLOs are measurable objectives used to guide engineering decisions.
 
-⸻
+â¸»
 
 4.8 SLI
 
@@ -381,7 +384,7 @@ SLI:
 
 The SLI tells us what actually happened.
 
-⸻
+â¸»
 
 4.9 SLA vs SLO vs SLI
 
@@ -421,7 +424,7 @@ SLI tells you what happened.
 SLO tells you what you want.
 SLA tells you what you promised.
 
-⸻
+â¸»
 
 4.10 Error Budget
 
@@ -448,9 +451,9 @@ Failures
 Downtime
 Errors
 
-This doesn’t mean you should intentionally use the entire budget. It provides a practical reliability target and helps balance reliability work against feature development.
+This doesnâ€™t mean you should intentionally use the entire budget. It provides a practical reliability target and helps balance reliability work against feature development.
 
-⸻
+â¸»
 
 4.11 Availability Mental Model
 
@@ -466,7 +469,7 @@ This doesn’t mean you should intentionally use the entire budget. It provides 
               |          |          |
            Failover   Replication  Multi-AZ
 
-⸻
+â¸»
 
 5. Reliability
 
@@ -486,7 +489,7 @@ Reliability asks:
 
 Does the system work correctly and consistently?
 
-⸻
+â¸»
 
 5.1 Availability vs Reliability
 
@@ -495,9 +498,9 @@ These concepts are related but different.
 Imagine a system that crashes frequently but restarts in one second.
 
 System fails
-     ↓
+     â†“
 Restarts quickly
-     ↓
+     â†“
 Available again
 
 It may have high availability because downtime is very short.
@@ -518,7 +521,7 @@ Downtime = 10 minutes
 
 System A may have better availability while being less reliable.
 
-⸻
+â¸»
 
 Simple Comparison
 
@@ -528,7 +531,7 @@ Reliability	Does it work correctly and consistently?
 Durability	Will stored data survive?
 Data Integrity	Is the data correct and uncorrupted?
 
-⸻
+â¸»
 
 5.2 Reliability Example
 
@@ -543,7 +546,7 @@ Persist transactions correctly
 Recover from failures
 Maintain correct balances
 
-Simply being reachable isn’t enough.
+Simply being reachable isnâ€™t enough.
 
 An API that returns:
 
@@ -551,7 +554,7 @@ HTTP 200 OK
 
 but charges a customer twice is not reliable.
 
-⸻
+â¸»
 
 5.3 MTBF
 
@@ -582,7 +585,7 @@ Meaning:
 
 Average time between failures = 100 hours
 
-⸻
+â¸»
 
 5.4 MTBF Interpretation
 
@@ -592,20 +595,20 @@ Fewer failures
 
 Example:
 
-System A → MTBF = 100 hours
-System B → MTBF = 1,000 hours
+System A â†’ MTBF = 100 hours
+System B â†’ MTBF = 1,000 hours
 
 System B fails less frequently.
 
 Therefore:
 
 Higher MTBF
-      ↓
+      â†“
 Less frequent failures
-      ↓
+      â†“
 Better reliability
 
-⸻
+â¸»
 
 5.5 MTTR
 
@@ -617,9 +620,9 @@ It represents the average time required to restore a system after a failure.
 
 Example:
 
-Failure 1 → Recovery = 10 min
-Failure 2 → Recovery = 20 min
-Failure 3 → Recovery = 15 min
+Failure 1 â†’ Recovery = 10 min
+Failure 2 â†’ Recovery = 20 min
+Failure 3 â†’ Recovery = 15 min
 
 Then:
 
@@ -627,14 +630,14 @@ MTTR
 = (10 + 20 + 15) / 3
 = 15 minutes
 
-⸻
+â¸»
 
 5.6 MTBF vs MTTR
 
 Remember:
 
-MTBF → How frequently do we fail?
-MTTR → How quickly do we recover?
+MTBF â†’ How frequently do we fail?
+MTTR â†’ How quickly do we recover?
 
 Therefore:
 
@@ -652,14 +655,14 @@ High MTBF
 +
 Low MTTR
 
-⸻
+â¸»
 
 5.7 Availability and MTBF/MTTR
 
 A commonly used simplified relationship is:
 
 Availability
-≈
+â‰ˆ
 MTBF / (MTBF + MTTR)
 
 Example:
@@ -671,18 +674,18 @@ Then:
 
 Availability
 = 1000 / (1000 + 1)
-≈ 99.90%
+â‰ˆ 99.90%
 
 This shows an important relationship:
 
 Increase MTBF
-        ↓
-Availability ↑
+        â†“
+Availability â†‘
 Decrease MTTR
-        ↓
-Availability ↑
+        â†“
+Availability â†‘
 
-⸻
+â¸»
 
 5.8 How to Improve MTBF
 
@@ -716,7 +719,7 @@ Primary DB
 
 This can reduce the impact of certain failures.
 
-⸻
+â¸»
 
 5.9 How to Improve MTTR
 
@@ -738,32 +741,32 @@ Example:
 Without automation:
 
 Failure
-  ↓
+  â†“
 Engineer notices
-  ↓
+  â†“
 Investigates
-  ↓
+  â†“
 Manually starts server
-  ↓
+  â†“
 Configures server
-  ↓
+  â†“
 Deploys application
 
 With automation:
 
 Failure
-  ↓
+  â†“
 Health check detects failure
-  ↓
+  â†“
 Orchestrator replaces instance
-  ↓
+  â†“
 Traffic redirected
-  ↓
+  â†“
 Service restored
 
 This reduces MTTR.
 
-⸻
+â¸»
 
 5.10 Durability
 
@@ -776,18 +779,18 @@ Durability is one of the ACID properties of database transactions.
 For example:
 
 User makes payment
-       ↓
+       â†“
 Transaction committed
-       ↓
+       â†“
 Database crashes
-       ↓
+       â†“
 Database restarts
-       ↓
+       â†“
 Payment still exists
 
 That demonstrates durability.
 
-⸻
+â¸»
 
 5.11 Availability vs Durability
 
@@ -804,14 +807,14 @@ Will my data still exist after a failure?
 Example:
 
 Database temporarily unavailable
-       ↓
+       â†“
 Data is still safely stored
 
 Availability is temporarily bad.
 
 Durability can still be excellent.
 
-⸻
+â¸»
 
 5.12 How to Improve Durability
 
@@ -850,7 +853,7 @@ Object Storage Replication
 
 Important files can be replicated across multiple failure domains.
 
-⸻
+â¸»
 
 5.13 Data Integrity
 
@@ -870,21 +873,21 @@ Example:
 
 A banking system has:
 
-Account A = ₹10,000
-Account B = ₹5,000
+Account A = â‚¹10,000
+Account B = â‚¹5,000
 
 A transfer of:
 
-₹2,000
+â‚¹2,000
 
 should result in:
 
-Account A = ₹8,000
-Account B = ₹7,000
+Account A = â‚¹8,000
+Account B = â‚¹7,000
 
-If the system deducts ₹2,000 from A but fails to credit B, data integrity has been violated.
+If the system deducts â‚¹2,000 from A but fails to credit B, data integrity has been violated.
 
-⸻
+â¸»
 
 5.14 Types of Data Integrity
 
@@ -896,9 +899,9 @@ Example:
 
 UserId = Primary Key
 
-A user shouldn’t have two records with the same primary key.
+A user shouldnâ€™t have two records with the same primary key.
 
-⸻
+â¸»
 
 2. Referential Integrity
 
@@ -911,9 +914,9 @@ Orders.CustomerId
         v
 Customers.Id
 
-An order shouldn’t reference a customer that doesn’t exist.
+An order shouldnâ€™t reference a customer that doesnâ€™t exist.
 
-⸻
+â¸»
 
 3. Domain Integrity
 
@@ -925,7 +928,7 @@ Age >= 0
 Quantity > 0
 Email must have valid format
 
-⸻
+â¸»
 
 4. Transaction Integrity
 
@@ -933,15 +936,15 @@ A transaction should preserve correctness.
 
 Example:
 
-Transfer ₹100
-Account A: -₹100
-Account B: +₹100
+Transfer â‚¹100
+Account A: -â‚¹100
+Account B: +â‚¹100
 
 Both operations should succeed together or fail together.
 
 This is where ACID transactions are important.
 
-⸻
+â¸»
 
 5.15 Reliability Techniques
 
@@ -966,7 +969,7 @@ To build reliable systems:
              |                 |
           Durability       Integrity
 
-⸻
+â¸»
 
 5.16 Reliability vs Availability vs Durability
 
@@ -996,7 +999,7 @@ Data Integrity
 
 Is the recovered data correct?
 
-⸻
+â¸»
 
 5.17 Complete Example: Payment System
 
@@ -1055,14 +1058,14 @@ Low MTTR
 Automatically recover failed instances:
 
 Health Check
-     ↓
+     â†“
 Failure Detected
-     ↓
+     â†“
 Instance Replaced
-     ↓
+     â†“
 Traffic Redirected
 
-⸻
+â¸»
 
 5.18 Interview Cheat Sheet
 
@@ -1098,11 +1101,11 @@ Reliability is the ability of a system to perform its intended function correctl
 
 What is MTBF?
 
-Mean Time Between Failures — average operating time between failures.
+Mean Time Between Failures â€” average operating time between failures.
 
 What is MTTR?
 
-Mean Time To Repair/Recover — average time required to restore a service after failure.
+Mean Time To Repair/Recover â€” average time required to restore a service after failure.
 
 What is Durability?
 
@@ -1112,7 +1115,7 @@ What is Data Integrity?
 
 Data integrity means data remains accurate, consistent, complete, and uncorrupted.
 
-⸻
+â¸»
 
 5.19 Final Mental Model
 
@@ -1145,14 +1148,14 @@ Data integrity means data remains accurate, consistent, complete, and uncorrupte
 
 One-Line Memory Trick
 
-Availability → Is it available?
-Reliability  → Does it work correctly?
-Durability   → Will the data survive?
-Integrity    → Is the data correct?
-MTBF         → How often does it fail?
-MTTR         → How fast can we recover?
-SLI          → What do we measure?
-SLO          → What do we target?
-SLA          → What do we promise?
+Availability â†’ Is it available?
+Reliability  â†’ Does it work correctly?
+Durability   â†’ Will the data survive?
+Integrity    â†’ Is the data correct?
+MTBF         â†’ How often does it fail?
+MTTR         â†’ How fast can we recover?
+SLI          â†’ What do we measure?
+SLO          â†’ What do we target?
+SLA          â†’ What do we promise?
 
 A highly available system is not automatically reliable, and a reliable system is not automatically durable. Good system design addresses all of them.

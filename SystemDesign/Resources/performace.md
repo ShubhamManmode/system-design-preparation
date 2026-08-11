@@ -1,3 +1,6 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: System Design Notes
+> Docs Index: [README.md](README.md)
 # Performance
 
 > **Goal:** Understand the key performance metrics used in designing scalable and highly efficient distributed systems.
@@ -412,7 +415,7 @@ Example
 ```
 One API Request
 
-↓
+â†“
 
 5 Database Queries
 ```

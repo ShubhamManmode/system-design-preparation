@@ -1,4 +1,12 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Syllabus Chapter
+> Docs Index: [README.md](../../README.md)
+
 # Core Components
+
+This chapter introduces the building blocks commonly used in large-scale distributed systems.
+
+## 1. Core Components
 
     1. Load Balancer
         Fundamentals

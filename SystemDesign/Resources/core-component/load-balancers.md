@@ -1,3 +1,10 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Resource Notes
+> Docs Index: [README.md](README.md)
+> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Resource Notes
+> Docs Index: [README.md](../../../README.md)
+
 # Load Balancer
 
 A **Load Balancer (LB)** is a networking component that distributes incoming client requests across multiple backend servers. Its primary goal is to improve **performance**, **availability**, **reliability**, and **scalability** by ensuring that no single server is overwhelmed with traffic.
@@ -32,13 +39,13 @@ A Load Balancer acts as the **entry point** for client requests. It sits between
 
 ```text
                     Client
-                       │
-                       ▼
+                       â”‚
+                       â–¼
              +------------------+
              |  Load Balancer   |
              +------------------+
-               │      │      │
-               ▼      ▼      ▼
+               â”‚      â”‚      â”‚
+               â–¼      â–¼      â–¼
           +-------+ +-------+ +-------+
           | App 1 | | App 2 | | App 3 |
           +-------+ +-------+ +-------+
@@ -54,8 +61,8 @@ Consider an application running on a single server.
 
 ```text
         Users
-          │
-          ▼
+          â”‚
+          â–¼
     +------------+
     |  Server A  |
     +------------+
@@ -75,13 +82,13 @@ A load balancer distributes requests among all available servers.
 
 ```text
                     Users
-                      │
-                      ▼
+                      â”‚
+                      â–¼
              +------------------+
              |  Load Balancer   |
              +------------------+
-               │      │      │
-               ▼      ▼      ▼
+               â”‚      â”‚      â”‚
+               â–¼      â–¼      â–¼
           +-------+ +-------+ +-------+
           | App 1 | | App 2 | | App 3 |
           +-------+ +-------+ +-------+
@@ -93,13 +100,13 @@ A load balancer distributes requests among all available servers.
 
 ```text
 Client
-   │
-   ▼
+   â”‚
+   â–¼
 Load Balancer
-   │
-   ├────────► Server 1
-   ├────────► Server 2
-   └────────► Server 3
+   â”‚
+   â”œâ”€â”€â”€â”€â”€â”€â”€â”€â–º Server 1
+   â”œâ”€â”€â”€â”€â”€â”€â”€â”€â–º Server 2
+   â””â”€â”€â”€â”€â”€â”€â”€â”€â–º Server 3
 ```
 
 The flow is simple:
@@ -120,11 +127,11 @@ If one backend server fails, the load balancer automatically routes traffic to h
 
 ```text
             Load Balancer
-                 │
-        ┌────────┴────────┐
-        ▼                 ▼
-   Server A ❌       Server B ✅
-                     Server C ✅
+                 â”‚
+        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”
+        â–¼                 â–¼
+   Server A âŒ       Server B âœ…
+                     Server C âœ…
 ```
 
 Users continue using the application without interruption.
@@ -140,8 +147,8 @@ Before:
 ```text
 Load Balancer
 
-├── Server 1
-└── Server 2
+â”œâ”€â”€ Server 1
+â””â”€â”€ Server 2
 ```
 
 After:
@@ -149,10 +156,10 @@ After:
 ```text
 Load Balancer
 
-├── Server 1
-├── Server 2
-├── Server 3
-└── Server 4
+â”œâ”€â”€ Server 1
+â”œâ”€â”€ Server 2
+â”œâ”€â”€ Server 3
+â””â”€â”€ Server 4
 ```
 
 ---
@@ -164,7 +171,7 @@ Instead of one server handling every request,
 ```text
 10,000 Requests
 
-↓
+â†“
 
 Server 1
 ```
@@ -174,11 +181,11 @@ traffic is distributed.
 ```text
 10,000 Requests
 
-↓
+â†“
 
 Load Balancer
 
-↓
+â†“
 
 Server 1
 Server 2
@@ -216,15 +223,15 @@ They do **not** inspect HTTP requests.
 ```text
 Client
 
-↓
+â†“
 
 TCP/UDP Request
 
-↓
+â†“
 
 Layer 4 Load Balancer
 
-↓
+â†“
 
 Backend Server
 ```
@@ -263,7 +270,7 @@ Example:
 ```text
 /api/users
 
-↓
+â†“
 
 User Service
 
@@ -271,7 +278,7 @@ User Service
 
 /api/orders
 
-↓
+â†“
 
 Order Service
 
@@ -279,7 +286,7 @@ Order Service
 
 /images
 
-↓
+â†“
 
 Image Server
 ```
@@ -327,15 +334,15 @@ The simplest algorithm.
 Requests are distributed sequentially.
 
 ```text
-Request 1 → Server 1
+Request 1 â†’ Server 1
 
-Request 2 → Server 2
+Request 2 â†’ Server 2
 
-Request 3 → Server 3
+Request 3 â†’ Server 3
 
-Request 4 → Server 1
+Request 4 â†’ Server 1
 
-Request 5 → Server 2
+Request 5 â†’ Server 2
 ```
 
 ### Best For
@@ -369,7 +376,7 @@ Server 2 : 12 Connections
 Server 3 : 35 Connections
 ```
 
-Next request →
+Next request â†’
 
 ```text
 Server 2
@@ -432,11 +439,11 @@ The client's IP address is hashed to determine the destination server.
 ```text
 Client IP
 
-↓
+â†“
 
 Hash Function
 
-↓
+â†“
 
 Server 2
 ```
@@ -475,11 +482,11 @@ HTTP/1.1 200 OK
 If a server repeatedly returns errors or stops responding, it is removed from the routing pool.
 
 ```text
-Server 1 ✅
+Server 1 âœ…
 
-Server 2 ❌
+Server 2 âŒ
 
-Server 3 ✅
+Server 3 âœ…
 ```
 
 Only healthy servers continue receiving requests.
@@ -503,11 +510,11 @@ Only healthy servers continue receiving requests.
 Normally, each request can be routed to any backend server.
 
 ```text
-Request 1 → Server A
+Request 1 â†’ Server A
 
-Request 2 → Server B
+Request 2 â†’ Server B
 
-Request 3 → Server C
+Request 3 â†’ Server C
 ```
 
 Some applications store user session data in server memory.
@@ -524,19 +531,19 @@ Sticky Sessions ensure the same client is consistently routed to the same backen
 ```text
 Client A
 
-↓
+â†“
 
 Load Balancer
 
-↓
+â†“
 
 Server B
 
-↓
+â†“
 
 Future Requests
 
-↓
+â†“
 
 Server B
 ```
@@ -571,11 +578,11 @@ Normally, every backend server performs TLS encryption and decryption.
 ```text
 Client
 
-↓
+â†“
 
 HTTPS
 
-↓
+â†“
 
 Application Server
 ```
@@ -585,19 +592,19 @@ With SSL Termination, encryption is handled by the load balancer.
 ```text
 Client
 
-↓
+â†“
 
 HTTPS
 
-↓
+â†“
 
 Load Balancer
 
-↓
+â†“
 
 HTTP (or HTTPS)
 
-↓
+â†“
 
 Application Servers
 ```

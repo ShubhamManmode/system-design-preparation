@@ -1,4 +1,12 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Syllabus Chapter
+> Docs Index: [README.md](../../README.md)
+
 # Database Fundamentals
+
+This chapter covers the fundamentals of databases, storage models, and query basics relevant to system design.
+
+## 1. Database Fundamentals
 
 This document serves as a structured study guide for database fundamentals in system design preparation.
 
@@ -955,8 +963,8 @@ An index on this column may not improve performance significantly because many r
 
 ### General Rule
 
-* **High Selectivity → Excellent candidate for indexing**
-* **Low Selectivity → Usually a poor candidate for indexing**, unless combined with other columns in a composite index or used in specific query patterns.
+* **High Selectivity â†’ Excellent candidate for indexing**
+* **Low Selectivity â†’ Usually a poor candidate for indexing**, unless combined with other columns in a composite index or used in specific query patterns.
 
 ---
 
@@ -1023,3 +1031,4 @@ An index on this column may not improve performance significantly because many r
 ## 11. Interview Problems
 
 - Prepare common interview questions on database design, SQL, indexing, transactions, and scaling.
+

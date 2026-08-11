@@ -1,3 +1,10 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Resource Notes
+> Docs Index: [README.md](README.md)
+> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Resource Notes
+> Docs Index: [README.md](../../../README.md)
+
 # DNS Resolution and CDN Flow
 
 ## Overview
@@ -14,70 +21,70 @@ If a **Content Delivery Network (CDN)** is configured, DNS returns the IP addres
 
 ```text
 User
-   │
-   ▼
+   â”‚
+   â–¼
 Browser
-   │
-   ▼
+   â”‚
+   â–¼
 Browser DNS Cache
-   │
-   ├── Cache Hit → Return IP
-   │
-   └── Cache Miss
-          │
-          ▼
+   â”‚
+   â”œâ”€â”€ Cache Hit â†’ Return IP
+   â”‚
+   â””â”€â”€ Cache Miss
+          â”‚
+          â–¼
 Operating System DNS Cache
-          │
-          ├── Cache Hit → Return IP
-          │
-          └── Cache Miss
-                 │
-                 ▼
+          â”‚
+          â”œâ”€â”€ Cache Hit â†’ Return IP
+          â”‚
+          â””â”€â”€ Cache Miss
+                 â”‚
+                 â–¼
 Router Cache (Optional)
-                 │
-                 ├── Cache Hit → Return IP
-                 │
-                 └── Cache Miss
-                        │
-                        ▼
+                 â”‚
+                 â”œâ”€â”€ Cache Hit â†’ Return IP
+                 â”‚
+                 â””â”€â”€ Cache Miss
+                        â”‚
+                        â–¼
 Configured Recursive Resolver
 (Google DNS / Cloudflare DNS / ISP DNS)
-                        │
-                        ▼
+                        â”‚
+                        â–¼
 Resolver Cache
-                        │
-                        ├── Cache Hit → Return IP
-                        │
-                        └── Cache Miss
-                               │
-                               ▼
+                        â”‚
+                        â”œâ”€â”€ Cache Hit â†’ Return IP
+                        â”‚
+                        â””â”€â”€ Cache Miss
+                               â”‚
+                               â–¼
 Root DNS Server
-                               │
-                               ▼
+                               â”‚
+                               â–¼
 TLD Name Server (.com)
-                               │
-                               ▼
+                               â”‚
+                               â–¼
 Authoritative DNS Server
-                               │
-                               ▼
+                               â”‚
+                               â–¼
 Returns IP Address
-                               │
-                               ▼
+                               â”‚
+                               â–¼
 Resolver caches response
-                               │
-                               ▼
+                               â”‚
+                               â–¼
 Operating System caches response
-                               │
-                               ▼
+                               â”‚
+                               â–¼
 Browser caches response
-                               │
-                               ▼
+                               â”‚
+                               â–¼
 TCP Connection
-                               │
-                               ▼
+                               â”‚
+                               â–¼
 TLS Handshake (HTTPS)
-                               │
-                               ▼
+                               â”‚
+                               â–¼
 HTTP Request
 ```
 
@@ -85,7 +92,7 @@ HTTP Request
 
 # Step-by-Step Explanation
 
-## Step 1 – User Enters URL
+## Step 1 â€“ User Enters URL
 
 Example:
 
@@ -97,7 +104,7 @@ The browser needs the IP address before it can establish a connection.
 
 ---
 
-## Step 2 – Browser Cache
+## Step 2 â€“ Browser Cache
 
 The browser checks whether it already knows the IP address.
 
@@ -108,7 +115,7 @@ If found:
 
 ---
 
-## Step 3 – Operating System Cache
+## Step 3 â€“ Operating System Cache
 
 If the browser cache misses, the operating system checks its DNS cache.
 
@@ -122,7 +129,7 @@ Otherwise:
 
 ---
 
-## Step 4 – Router Cache (Optional)
+## Step 4 â€“ Router Cache (Optional)
 
 Some home and enterprise routers cache DNS responses.
 
@@ -136,7 +143,7 @@ Otherwise:
 
 ---
 
-## Step 5 – Recursive DNS Resolver
+## Step 5 â€“ Recursive DNS Resolver
 
 The operating system sends the request to its configured DNS resolver.
 
@@ -150,7 +157,7 @@ The resolver first checks its own cache.
 
 ---
 
-## Step 6 – Root DNS Server
+## Step 6 â€“ Root DNS Server
 
 If the resolver cache misses:
 
@@ -172,7 +179,7 @@ Ask the .com TLD Server.
 
 ---
 
-## Step 7 – TLD Name Server
+## Step 7 â€“ TLD Name Server
 
 The resolver asks the `.com` Name Server.
 
@@ -197,7 +204,7 @@ The TLD server still does **not** return the website IP.
 
 ---
 
-## Step 8 – Authoritative DNS Server
+## Step 8 â€“ Authoritative DNS Server
 
 The resolver contacts Cloudflare's authoritative nameserver.
 
@@ -214,7 +221,7 @@ Example:
 ```
 www.myapp.com
 
-↓
+â†“
 
 104.21.10.15
 ```
@@ -223,7 +230,7 @@ This is the final source of truth.
 
 ---
 
-## Step 9 – Caching
+## Step 9 â€“ Caching
 
 The resolver caches the response based on the TTL.
 
@@ -236,15 +243,15 @@ Future requests become much faster.
 
 ---
 
-## Step 10 – Network Connection
+## Step 10 â€“ Network Connection
 
 After obtaining the IP address:
 
 ```
 TCP 3-Way Handshake
-        ↓
+        â†“
 TLS Handshake
-        ↓
+        â†“
 HTTP Request
 ```
 
@@ -259,15 +266,15 @@ Without a CDN:
 ```
 DNS
 
-↓
+â†“
 
 Origin Server IP
 
-↓
+â†“
 
 Browser
 
-↓
+â†“
 
 Origin Server
 ```
@@ -281,15 +288,15 @@ With a CDN:
 ```
 DNS
 
-↓
+â†“
 
 Nearest CDN Edge IP
 
-↓
+â†“
 
 Browser
 
-↓
+â†“
 
 CDN Edge
 ```
@@ -302,45 +309,45 @@ The browser connects to the CDN instead of the origin.
 
 ```
 User
-   │
-   ▼
+   â”‚
+   â–¼
 Browser
-   │
-   ▼
+   â”‚
+   â–¼
 Recursive Resolver
-   │
-   ▼
+   â”‚
+   â–¼
 Root DNS
-   │
-   ▼
+   â”‚
+   â–¼
 TLD
-   │
-   ▼
+   â”‚
+   â–¼
 Cloudflare Authoritative DNS
-   │
-   ▼
+   â”‚
+   â–¼
 Returns IP of Nearest Edge
-   │
-   ▼
+   â”‚
+   â–¼
 Browser connects to CDN
-   │
-   ├── Cache Hit
-   │       │
-   │       ▼
-   │   Return Content
-   │
-   └── Cache Miss
-           │
-           ▼
+   â”‚
+   â”œâ”€â”€ Cache Hit
+   â”‚       â”‚
+   â”‚       â–¼
+   â”‚   Return Content
+   â”‚
+   â””â”€â”€ Cache Miss
+           â”‚
+           â–¼
       Origin Server
-           │
-           ▼
+           â”‚
+           â–¼
       Fetch Content
-           │
-           ▼
+           â”‚
+           â–¼
       Store in CDN Cache
-           │
-           ▼
+           â”‚
+           â–¼
       Return Content
 ```
 
@@ -357,15 +364,15 @@ Example:
 ```
 User
 
-↓
+â†“
 
 Pune
 
-↓
+â†“
 
 Nearest Edge
 
-↓
+â†“
 
 Mumbai
 ```
@@ -389,11 +396,11 @@ Cloudflare returns the IP address of the Mumbai edge server instead of the origi
 
 ```
 Browser Cache
-        ↓
+        â†“
 Operating System Cache
-        ↓
+        â†“
 Router Cache
-        ↓
+        â†“
 Recursive Resolver Cache
 ```
 
@@ -457,3 +464,4 @@ The CDN then serves the content.
 * DNS completes before any TCP, TLS, or HTTP communication begins.
 * When using a CDN, DNS returns the nearest CDN edge IP instead of the origin server.
 * The browser connects to the CDN first; the origin server is contacted only on a cache miss.
+

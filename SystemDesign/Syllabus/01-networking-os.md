@@ -1,4 +1,12 @@
-  1. Networking
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Syllabus Chapter
+> Docs Index: [README.md](../../README.md)
+
+# Networking and Operating Systems
+
+This chapter introduces the core networking and OS concepts required for system design.
+
+## 1. Networking
 
         1.1 Networking Basics
             Why Networking
@@ -136,3 +144,4 @@
             Reader-Writer
             Event Loop
             Reactor Pattern
+

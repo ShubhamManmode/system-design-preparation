@@ -1,3 +1,6 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: System Design Notes
+> Docs Index: [README.md](README.md)
 # High-Level Design (HLD)
 
     1. HLD Fundamentals

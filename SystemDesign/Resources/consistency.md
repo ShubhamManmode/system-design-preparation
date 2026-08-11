@@ -1,3 +1,6 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: System Design Notes
+> Docs Index: [README.md](README.md)
 # 6. Consistency
 
 Consistency is a fundamental concept in **distributed systems** that defines **what value a client should see when reading data after writes happen across multiple nodes**.
@@ -5,23 +8,23 @@ Consistency is a fundamental concept in **distributed systems** that defines **w
 In a distributed system, the same data may exist on multiple servers because of **replication**.
 
 ```text
-                 ┌──────────────┐
-                 │   Client     │
-                 └──────┬───────┘
-                        │
+                 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+                 â”‚   Client     â”‚
+                 â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜
+                        â”‚
                   Write: balance=100
-                        │
-                ┌───────▼───────┐
-                │   Database    │
-                │   Primary     │
-                └───────┬───────┘
-                        │
-              ┌─────────┴─────────┐
-              ▼                   ▼
-        ┌───────────┐       ┌───────────┐
-        │ Replica 1 │       │ Replica 2 │
-        │ balance=100│      │ balance=90 │
-        └───────────┘       └───────────┘
+                        â”‚
+                â”Œâ”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”
+                â”‚   Database    â”‚
+                â”‚   Primary     â”‚
+                â””â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜
+                        â”‚
+              â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+              â–¼                   â–¼
+        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”       â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+        â”‚ Replica 1 â”‚       â”‚ Replica 2 â”‚
+        â”‚ balance=100â”‚      â”‚ balance=90 â”‚
+        â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜       â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 If a client reads from Replica 2 immediately after the write, it might see `90` instead of `100`.
@@ -56,7 +59,7 @@ Strong Consistency:
 
 Eventual Consistency:
     100 or 200
-    but eventually → 200
+    but eventually â†’ 200
 ```
 
 Consistency is especially important when data is:
@@ -74,17 +77,17 @@ Strong consistency guarantees that **once a write is acknowledged, subsequent re
 
 ```text
 Write
-  │
-  ▼
+  â”‚
+  â–¼
 Node A = 200
-  │
-  ├── Replica B = 200
-  └── Replica C = 200
-  │
-  ▼
+  â”‚
+  â”œâ”€â”€ Replica B = 200
+  â””â”€â”€ Replica C = 200
+  â”‚
+  â–¼
 Read
-  │
-  ▼
+  â”‚
+  â–¼
 200
 ```
 
@@ -136,17 +139,17 @@ Weak consistency does **not guarantee that a read immediately after a write will
 
 ```text
 WRITE
-  │
-  ▼
+  â”‚
+  â–¼
 Primary = 200
-  │
-  │ replication delay
-  ▼
+  â”‚
+  â”‚ replication delay
+  â–¼
 Replica = 100
 
 READ Replica
-  │
-  ▼
+  â”‚
+  â–¼
 100
 ```
 
@@ -287,7 +290,7 @@ Therefore:
 
 ```text
 Post "Hello"
-      ↓
+      â†“
 Reply "Hi"
 ```
 
@@ -317,7 +320,7 @@ Everyone should observe:
 
 ```text
 Post
- ↓
+ â†“
 Reply
 ```
 
@@ -338,13 +341,13 @@ These operations are independent.
 The system could show:
 
 ```text
-A → B
+A â†’ B
 ```
 
 or
 
 ```text
-B → A
+B â†’ A
 ```
 
 as long as causal relationships are preserved.
@@ -384,15 +387,15 @@ after successfully updating it.
 
 ```text
 Client
-  │
-  ├── WRITE name = Shubham
-  │
-  ▼
+  â”‚
+  â”œâ”€â”€ WRITE name = Shubham
+  â”‚
+  â–¼
 Primary
 
-  │
-  ├── READ
-  ▼
+  â”‚
+  â”œâ”€â”€ READ
+  â–¼
 Replica
 
 Result:
@@ -421,11 +424,11 @@ Monotonic reads guarantee:
 Example:
 
 ```text
-Read 1 → Version 5
+Read 1 â†’ Version 5
 
-Read 2 → Version 6
+Read 2 â†’ Version 6
 
-Read 3 → Version 6
+Read 3 â†’ Version 6
 ```
 
 Valid.
@@ -433,9 +436,9 @@ Valid.
 But:
 
 ```text
-Read 1 → Version 5
+Read 1 â†’ Version 5
 
-Read 2 → Version 3
+Read 2 â†’ Version 3
 ```
 
 is not allowed.
@@ -444,15 +447,15 @@ is not allowed.
 
 ```text
 Request 1
-   ↓
+   â†“
 Replica A
-   ↓
+   â†“
 Version 10
 
 Request 2
-   ↓
+   â†“
 Replica B
-   ↓
+   â†“
 Version 7
 ```
 
@@ -463,11 +466,11 @@ The user sees data moving backward.
 ```text
 Observed versions:
 
-5 → 6 → 7 → 8
-✓
+5 â†’ 6 â†’ 7 â†’ 8
+âœ“
 
-5 → 7 → 6
-✗
+5 â†’ 7 â†’ 6
+âœ—
 ```
 
 The version observed by a client should move **forward or stay the same**.
@@ -494,7 +497,7 @@ The system must process:
 
 ```text
 A
-↓
+â†“
 B
 ```
 
@@ -502,7 +505,7 @@ not:
 
 ```text
 B
-↓
+â†“
 A
 ```
 
@@ -512,9 +515,9 @@ Suppose two requests are sent to different servers:
 
 ```text
 Client
- ├── Write A ──→ Node 1
- │
- └── Write B ──→ Node 2
+ â”œâ”€â”€ Write A â”€â”€â†’ Node 1
+ â”‚
+ â””â”€â”€ Write B â”€â”€â†’ Node 2
 ```
 
 If Node 2 processes `B` before Node 1 processes `A`, ordering can be violated.
@@ -545,14 +548,14 @@ Example:
 
 ```text
 User Session
-     │
-     ├── WRITE X
-     │
-     ├── READ X
-     │
-     ├── WRITE Y
-     │
-     └── READ Y
+     â”‚
+     â”œâ”€â”€ WRITE X
+     â”‚
+     â”œâ”€â”€ READ X
+     â”‚
+     â”œâ”€â”€ WRITE Y
+     â”‚
+     â””â”€â”€ READ Y
 ```
 
 The system ensures the user's experience remains consistent within that session.
@@ -564,7 +567,7 @@ An e-commerce website:
 ```text
 User adds:
 
-iPhone → Cart
+iPhone â†’ Cart
 
 Refresh cart
 
@@ -594,11 +597,11 @@ Example:
 Client A:
 
 WRITE X = 10
-     │
-     ▼
+     â”‚
+     â–¼
 Completed
-     │
-     ▼
+     â”‚
+     â–¼
 Client B:
 
 READ X
@@ -616,12 +619,12 @@ because the write completed before the read started.
 
 ```text
 WRITE 10
-   │
-   │ completed
-   ▼
+   â”‚
+   â”‚ completed
+   â–¼
 READ
-   │
-   ▼
+   â”‚
+   â–¼
 10
 ```
 
@@ -666,7 +669,7 @@ The system must preserve A's order:
 
 ```text
 X=1
- ↓
+ â†“
 X=2
 ```
 
@@ -710,11 +713,11 @@ A read must receive responses from at least 2 replicas.
 
 ```text
              READ
-               │
-       ┌───────┼───────┐
-       ▼       ▼       ▼
+               â”‚
+       â”Œâ”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”
+       â–¼       â–¼       â–¼
       R1      R2      R3
-       ✓       ✓       ✗
+       âœ“       âœ“       âœ—
 
 Read quorum = 2
 ```
@@ -746,7 +749,7 @@ R = 2
 
 R + W = 4
 
-4 > 3 ✓
+4 > 3 âœ“
 ```
 
 This means the read and write quorums must overlap in at least one replica.
@@ -790,11 +793,11 @@ WRITE X = 100
 
 ```text
              WRITE
-               │
-       ┌───────┼───────┐
-       ▼       ▼       ▼
+               â”‚
+       â”Œâ”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”
+       â–¼       â–¼       â–¼
       R1      R2      R3
-       ✓       ✓       ✗
+       âœ“       âœ“       âœ—
 
 W = 2
 ```
@@ -816,7 +819,7 @@ Then:
 R + W > N
 
 3 + 3 > 5
-6 > 5 ✓
+6 > 5 âœ“
 ```
 
 Therefore, read and write quorums overlap.
@@ -840,9 +843,9 @@ Client performs a quorum read.
 ```text
 READ
 
-R1 → 100
-R2 → 100
-R3 → 90
+R1 â†’ 100
+R2 â†’ 100
+R3 â†’ 90
 ```
 
 The system identifies:
@@ -861,7 +864,7 @@ R1 = 100
 R2 = 100
 R3 = 90
 
-        ↓ Read Repair
+        â†“ Read Repair
 
 After:
 
@@ -904,13 +907,13 @@ A background synchronization process compares replicas.
 
 ```text
         Anti-Entropy
-             │
-       ┌─────┴─────┐
-       ▼           ▼
+             â”‚
+       â”Œâ”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”
+       â–¼           â–¼
       R1           R3
      100           90
 
-             ↓
+             â†“
 
            R3 = 100
 ```
@@ -931,12 +934,12 @@ the system can compare hashes.
 Replica A              Replica B
 
    Root Hash              Root Hash
-       │                      │
+       â”‚                      â”‚
     compare                 compare
-       │                      │
+       â”‚                      â”‚
     mismatch               mismatch
-       │
-       ▼
+       â”‚
+       â–¼
 Find affected subtree
 ```
 
@@ -978,20 +981,20 @@ This makes synchronization much more efficient.
 For replicated storage:
 
 ```text
-             ┌───────────────┐
-             │    Client     │
-             └───────┬───────┘
-                     │
-             ┌───────▼───────┐
-             │  Coordinator  │
-             └───────┬───────┘
-                     │
-          ┌──────────┼──────────┐
-          ▼          ▼          ▼
+             â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+             â”‚    Client     â”‚
+             â””â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜
+                     â”‚
+             â”Œâ”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”
+             â”‚  Coordinator  â”‚
+             â””â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜
+                     â”‚
+          â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+          â–¼          â–¼          â–¼
        Replica 1  Replica 2  Replica 3
-          │          │          │
-          └──────────┼──────────┘
-                     │
+          â”‚          â”‚          â”‚
+          â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                     â”‚
               Quorum Decision
 ```
 
@@ -1033,19 +1036,19 @@ A useful mental model is:
 
 ```text
                     CONSISTENCY
-                         │
-       ┌─────────────────┼──────────────────┐
-       │                 │                  │
-       ▼                 ▼                  ▼
+                         â”‚
+       â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+       â”‚                 â”‚                  â”‚
+       â–¼                 â–¼                  â–¼
   Consistency       Client-Level       Replication
     Models           Guarantees         Mechanisms
-       │                 │                  │
-       ├─ Strong         ├─ Read-Your-Writes ├─ Quorum Read
-       ├─ Weak           ├─ Monotonic Reads  ├─ Quorum Write
-       ├─ Eventual       ├─ Monotonic Writes ├─ Read Repair
-       ├─ Causal         └─ Session          └─ Anti-Entropy
-       ├─ Sequential
-       └─ Linearizable
+       â”‚                 â”‚                  â”‚
+       â”œâ”€ Strong         â”œâ”€ Read-Your-Writes â”œâ”€ Quorum Read
+       â”œâ”€ Weak           â”œâ”€ Monotonic Reads  â”œâ”€ Quorum Write
+       â”œâ”€ Eventual       â”œâ”€ Monotonic Writes â”œâ”€ Read Repair
+       â”œâ”€ Causal         â””â”€ Session          â””â”€ Anti-Entropy
+       â”œâ”€ Sequential
+       â””â”€ Linearizable
 ```
 
 ---
@@ -1056,21 +1059,21 @@ When asked about **consistency in system design**, think in this order:
 
 ```text
 1. Is the data replicated?
-        ↓
+        â†“
 2. Can replicas temporarily disagree?
-        ↓
+        â†“
 3. What should a read return?
-        ↓
+        â†“
 4. Do we need strong or eventual consistency?
-        ↓
+        â†“
 5. Do clients need session guarantees?
-        ↓
+        â†“
 6. How do we maintain replica consistency?
-        ↓
+        â†“
 7. Quorum?
-        ↓
+        â†“
 8. Read Repair?
-        ↓
+        â†“
 9. Anti-Entropy?
 ```
 
@@ -1078,28 +1081,28 @@ When asked about **consistency in system design**, think in this order:
 
 ```text
 Financial transaction
-        ↓
+        â†“
 Strong / Linearizable
 Consistency
 
 
 Social media feed
-        ↓
+        â†“
 Eventual Consistency
 
 
 Chat / comments
-        ↓
+        â†“
 Causal Consistency
 
 
 User profile update
-        ↓
+        â†“
 Read-Your-Writes
 
 
 Distributed replicated DB
-        ↓
+        â†“
 Quorum + Read Repair + Anti-Entropy
 ```
 
@@ -1110,21 +1113,21 @@ Quorum + Read Repair + Anti-Entropy
 ### Strong Consistency
 
 ```text
-Write completed → Read sees latest value
+Write completed â†’ Read sees latest value
 ```
 
 ### Eventual Consistency
 
 ```text
 Replicas may temporarily differ
-        ↓
+        â†“
 Eventually converge
 ```
 
 ### Causal Consistency
 
 ```text
-Cause → Effect
+Cause â†’ Effect
 must be observed in that order
 ```
 
@@ -1132,7 +1135,7 @@ must be observed in that order
 
 ```text
 I wrote X
-  ↓
+  â†“
 I must read X
 ```
 
@@ -1140,9 +1143,9 @@ I must read X
 
 ```text
 Read version 5
-  ↓
+  â†“
 Read version 6
-  ↓
+  â†“
 Never go back to version 4
 ```
 
@@ -1150,7 +1153,7 @@ Never go back to version 4
 
 ```text
 Write A
-  ↓
+  â†“
 Write B
 
 A must be applied before B
@@ -1183,7 +1186,7 @@ creates overlap between read and write quorums.
 
 ```text
 Read discovers stale replica
-        ↓
+        â†“
 Repair it
 ```
 
@@ -1191,8 +1194,9 @@ Repair it
 
 ```text
 Background synchronization
-        ↓
+        â†“
 Find differences
-        ↓
+        â†“
 Repair replicas
 ```
+

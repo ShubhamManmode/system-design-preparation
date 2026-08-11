@@ -1,8 +1,11 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: System Design Notes
+> Docs Index: [README.md](README.md)
 Scalability
 
 Goal: Understand how systems handle increasing traffic, users, and data while maintaining performance and availability.
 
-⸻
+â¸»
 
 Table of Contents
 
@@ -22,7 +25,7 @@ Table of Contents
 10. Interview Questions
 11. Cheat Sheet
 
-⸻
+â¸»
 
 What is Scalability?
 
@@ -40,18 +43,18 @@ The workload may increase because of:
 
 A scalable system should continue to provide acceptable response times even as demand grows.
 
-⸻
+â¸»
 
 Example
 
 Suppose an e-commerce website receives:
 
-* Day 1 → 1,000 users/day
-* Festival Sale → 2 million users/day
+* Day 1 â†’ 1,000 users/day
+* Festival Sale â†’ 2 million users/day
 
 If the application continues serving users without crashing or slowing down dramatically, it is considered scalable.
 
-⸻
+â¸»
 
 Why Scalability Matters
 
@@ -71,7 +74,7 @@ With scalability:
 * Ability to handle traffic spikes
 * Lower operational risk
 
-⸻
+â¸»
 
 Vertical Scaling (Scale Up)
 
@@ -86,7 +89,7 @@ Examples:
 * Faster SSD
 * Better Network
 
-⸻
+â¸»
 
 Architecture
 
@@ -94,13 +97,13 @@ Before
 Application
 4 CPU
 8 GB RAM
-↓
+â†“
 After Scale Up
 Application
 32 CPU
 128 GB RAM
 
-⸻
+â¸»
 
 How It Works
 
@@ -108,7 +111,7 @@ Instead of adding more machines, the same machine becomes more powerful.
 
 The application continues running on a single server.
 
-⸻
+â¸»
 
 Advantages
 
@@ -118,7 +121,7 @@ Advantages
 * Easier maintenance
 * Suitable for monolithic applications
 
-⸻
+â¸»
 
 Disadvantages
 
@@ -127,7 +130,7 @@ Disadvantages
 * Single point of failure
 * Downtime during upgrades (in many environments)
 
-⸻
+â¸»
 
 Real Example
 
@@ -143,7 +146,7 @@ Instead of changing architecture, the server is upgraded to:
 * 16 CPU
 * 64 GB RAM
 
-⸻
+â¸»
 
 Best Use Cases
 
@@ -152,7 +155,7 @@ Best Use Cases
 * Development environments
 * Early-stage startups
 
-⸻
+â¸»
 
 Horizontal Scaling (Scale Out)
 
@@ -162,7 +165,7 @@ Horizontal scaling means adding more servers to distribute the workload.
 
 Instead of making one server larger, multiple servers work together.
 
-⸻
+â¸»
 
 Architecture
 
@@ -172,7 +175,7 @@ Architecture
                |
             Database
 
-⸻
+â¸»
 
 How It Works
 
@@ -182,7 +185,7 @@ The load balancer distributes requests among available servers.
 
 Each server processes only a portion of the total traffic.
 
-⸻
+â¸»
 
 Advantages
 
@@ -192,7 +195,7 @@ Advantages
 * Better reliability
 * Zero-downtime deployments
 
-⸻
+â¸»
 
 Disadvantages
 
@@ -201,7 +204,7 @@ Disadvantages
 * Data synchronization challenges
 * Session management becomes difficult
 
-⸻
+â¸»
 
 Real Examples
 
@@ -213,7 +216,7 @@ Real Examples
 
 These companies run thousands of application servers instead of one giant machine.
 
-⸻
+â¸»
 
 Vertical vs Horizontal Scaling
 
@@ -226,11 +229,11 @@ Fault Tolerance	Low	High
 Complexity	Low	High
 Best For	Small Apps	Large Distributed Systems
 
-⸻
+â¸»
 
 Stateless vs Stateful Applications
 
-⸻
+â¸»
 
 Stateless
 
@@ -239,9 +242,9 @@ A stateless application does not store user-specific information between request
 Each request contains everything needed to process it.
 
 User
-↓
+â†“
 Server
-↓
+â†“
 Response
 (Server forgets everything)
 
@@ -252,7 +255,7 @@ Advantages
 * Better fault tolerance
 * Simple deployments
 
-⸻
+â¸»
 
 Examples
 
@@ -261,7 +264,7 @@ Examples
 * Authentication using JWT
 * Search services
 
-⸻
+â¸»
 
 Stateful
 
@@ -274,15 +277,15 @@ Examples include:
 * Multiplayer game session
 
 User
-↓
+â†“
 Server
 (Session Stored)
-↓
+â†“
 Next Request
-↓
+â†“
 Same Server Required
 
-⸻
+â¸»
 
 Problems
 
@@ -292,7 +295,7 @@ If the request goes to another server:
 * User logged out
 * Shopping cart disappears
 
-⸻
+â¸»
 
 Solutions
 
@@ -301,7 +304,7 @@ Solutions
 * Distributed Cache
 * Database-backed sessions
 
-⸻
+â¸»
 
 Stateless vs Stateful
 
@@ -312,7 +315,7 @@ Load Balancer	Simple	Sticky Sessions Needed
 Failure Recovery	Easy	Difficult
 Cloud Native	Yes	Limited
 
-⸻
+â¸»
 
 Elasticity
 
@@ -322,7 +325,7 @@ Elasticity is the ability of a system to automatically increase or decrease reso
 
 Unlike scalability, elasticity focuses on automatic adaptation.
 
-⸻
+â¸»
 
 Example
 
@@ -340,7 +343,7 @@ Midnight:
 
 Resources are added and removed automatically.
 
-⸻
+â¸»
 
 Benefits
 
@@ -349,7 +352,7 @@ Benefits
 * Handles unpredictable traffic
 * Supports cloud-native applications
 
-⸻
+â¸»
 
 Auto Scaling
 
@@ -366,33 +369,33 @@ Common metrics include:
 * Network traffic
 * Custom business metrics
 
-⸻
+â¸»
 
 Workflow
 
 CPU > 80%
-↓
+â†“
 Monitoring detects threshold
-↓
+â†“
 Launch New Instance
-↓
+â†“
 Register with Load Balancer
-↓
+â†“
 Traffic Distributed
 
-⸻
+â¸»
 
 Scale In
 
 When traffic decreases:
 
 Low CPU
-↓
+â†“
 Terminate Extra Servers
-↓
+â†“
 Reduce Cost
 
-⸻
+â¸»
 
 Cloud Services
 
@@ -401,11 +404,11 @@ Cloud Services
 * Google Managed Instance Groups
 * Kubernetes Horizontal Pod Autoscaler (HPA)
 
-⸻
+â¸»
 
 Scaling Strategies
 
-⸻
+â¸»
 
 1. Compute Scaling
 
@@ -413,7 +416,7 @@ Purpose
 
 Increase processing capacity.
 
-⸻
+â¸»
 
 Vertical
 
@@ -423,17 +426,17 @@ Increase:
 * RAM
 * Faster processors
 
-⸻
+â¸»
 
 Horizontal
 
 Add more application servers.
 
 Load Balancer
-↓
+â†“
 10 Application Servers
 
-⸻
+â¸»
 
 Used For
 
@@ -443,7 +446,7 @@ Used For
 * AI Inference
 * Batch Jobs
 
-⸻
+â¸»
 
 2. Storage Scaling
 
@@ -451,7 +454,7 @@ Purpose
 
 Handle increasing amounts of data.
 
-⸻
+â¸»
 
 Vertical
 
@@ -459,9 +462,9 @@ Increase storage capacity of one database server.
 
 Example:
 
-1 TB → 8 TB SSD
+1 TB â†’ 8 TB SSD
 
-⸻
+â¸»
 
 Horizontal
 
@@ -473,7 +476,7 @@ Techniques:
 * Distributed File Systems
 * Object Storage
 
-⸻
+â¸»
 
 Examples
 
@@ -482,7 +485,7 @@ Examples
 * Google Cloud Storage
 * HDFS
 
-⸻
+â¸»
 
 3. Read Scaling
 
@@ -490,7 +493,7 @@ Problem
 
 Too many read requests overload the primary database.
 
-⸻
+â¸»
 
 Solution
 
@@ -502,10 +505,10 @@ Use Read Replicas.
 
 Applications send:
 
-* Writes → Primary
-* Reads → Replicas
+* Writes â†’ Primary
+* Reads â†’ Replicas
 
-⸻
+â¸»
 
 Benefits
 
@@ -513,7 +516,7 @@ Benefits
 * Lower latency
 * Reduced load on primary
 
-⸻
+â¸»
 
 Challenges
 
@@ -521,7 +524,7 @@ Challenges
 * Eventual consistency
 * Read-after-write issues
 
-⸻
+â¸»
 
 4. Write Scaling
 
@@ -529,40 +532,40 @@ Problem
 
 A single database eventually becomes a bottleneck for write operations.
 
-⸻
+â¸»
 
 Techniques
 
 Database Sharding
 
 User A-M
-↓
+â†“
 Shard 1
 User N-Z
-↓
+â†“
 Shard 2
 
-⸻
+â¸»
 
 Partitioning
 
 Split large tables into smaller partitions.
 
-⸻
+â¸»
 
 Event Queue
 
 Client
-↓
+â†“
 Kafka
-↓
+â†“
 Consumers
-↓
+â†“
 Database
 
 Writes are processed asynchronously.
 
-⸻
+â¸»
 
 CQRS
 
@@ -572,7 +575,7 @@ Separate read and write models.
 * Optimized reads
 * Independent scaling
 
-⸻
+â¸»
 
 Challenges
 
@@ -581,7 +584,7 @@ Challenges
 * Data consistency
 * Operational complexity
 
-⸻
+â¸»
 
 Real-World Example
 
@@ -601,7 +604,7 @@ Suppose an application grows from 1,000 users to 50 million users.
 
 This is a common evolution path for large-scale internet applications.
 
-⸻
+â¸»
 
 Interview Questions
 
@@ -613,7 +616,7 @@ Basic
 * Why are stateless applications easier to scale?
 * What is auto scaling?
 
-⸻
+â¸»
 
 Intermediate
 
@@ -622,7 +625,7 @@ Intermediate
 * How do read replicas improve scalability?
 * What is replication lag?
 
-⸻
+â¸»
 
 Advanced
 
@@ -631,7 +634,7 @@ Advanced
 * How would you eliminate a database bottleneck?
 * How would you scale a stateful application?
 
-⸻
+â¸»
 
 Cheat Sheet
 

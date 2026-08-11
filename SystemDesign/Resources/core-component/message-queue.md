@@ -1,3 +1,7 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Resource Notes
+> Docs Index: [README.md](../../../README.md)
+
 # Message Queue (MQ)
 
 > Message Queues enable asynchronous communication between services, improving scalability, reliability, and fault tolerance.
@@ -11,7 +15,7 @@
 A Message Queue is middleware that stores messages sent by producers until consumers process them.
 
 ```
-Producer → Queue → Consumer
+Producer â†’ Queue â†’ Consumer
 ```
 
 Instead of direct communication, services exchange messages through a broker.
@@ -56,14 +60,14 @@ Instead of direct communication, services exchange messages through a broker.
 
 ```
 Producer
-    │
-    ▼
+    â”‚
+    â–¼
 Message Broker
-    │
-    ▼
+    â”‚
+    â–¼
  Queue Storage
-    │
-    ▼
+    â”‚
+    â–¼
 Consumer
 ```
 
@@ -82,21 +86,21 @@ Consumer
 ```
 Producer
 
-   │
+   â”‚
 
 Queue
 
-   │
+   â”‚
 
-Consumer ❌
+Consumer âŒ
 
 No ACK
 
-↓
+â†“
 
 Message stays in Queue
 
-↓
+â†“
 
 Retry
 ```
@@ -107,16 +111,16 @@ Retry
 
 ## Queue
 
-One message → One consumer
+One message â†’ One consumer
 
 ```
 Producer
 
-   │
+   â”‚
 
  Queue
 
-   │
+   â”‚
 
 Consumer A
 ```
@@ -131,12 +135,12 @@ Best For
 
 ## Pub/Sub
 
-One message → Multiple consumers
+One message â†’ Multiple consumers
 
 ```
            Email
 
-Producer → Topic → SMS
+Producer â†’ Topic â†’ SMS
 
            Analytics
 
@@ -169,7 +173,7 @@ Best For
 ```
 Deliver
 
-↓
+â†“
 
 Delete Immediately
 ```
@@ -190,11 +194,11 @@ Cons
 ```
 Deliver
 
-↓
+â†“
 
 Wait ACK
 
-↓
+â†“
 
 Delete
 ```
@@ -242,11 +246,11 @@ Ordering means messages are processed in the same sequence.
 ```
 M1
 
-↓
+â†“
 
 M2
 
-↓
+â†“
 
 M3
 ```
@@ -260,9 +264,9 @@ Multiple consumers break ordering.
 Partition using a key.
 
 ```
-User1 → Partition1
+User1 â†’ Partition1
 
-User2 → Partition2
+User2 â†’ Partition2
 ```
 
 Ordering is guaranteed inside a partition.
@@ -280,11 +284,11 @@ Consumers may fail temporarily.
 ```
 Process
 
-↓
+â†“
 
 Fail
 
-↓
+â†“
 
 Retry
 ```
@@ -300,15 +304,15 @@ Retry instantly.
 ```
 1s
 
-↓
+â†“
 
 2s
 
-↓
+â†“
 
 4s
 
-↓
+â†“
 
 8s
 ```
@@ -318,15 +322,15 @@ Retry instantly.
 ```
 Retry
 
-↓
+â†“
 
 Retry
 
-↓
+â†“
 
 Retry
 
-↓
+â†“
 
 DLQ
 ```
@@ -346,19 +350,19 @@ Messages that repeatedly fail are moved to DLQ.
 ```
 Queue
 
-↓
+â†“
 
 Retry
 
-↓
+â†“
 
 Retry
 
-↓
+â†“
 
 Retry
 
-↓
+â†“
 
 DLQ
 ```
@@ -384,17 +388,17 @@ Benefits
 ```
 Order Created
 
-↓
+â†“
 
 Event Bus
 
-├── Email
+â”œâ”€â”€ Email
 
-├── Inventory
+â”œâ”€â”€ Inventory
 
-├── Analytics
+â”œâ”€â”€ Analytics
 
-└── Notification
+â””â”€â”€ Notification
 ```
 
 ### Pros
@@ -415,11 +419,11 @@ Event Bus
 ```
 Producer
 
-↓
+â†“
 
 Queue
 
-↓
+â†“
 
 Worker Pool
 ```
@@ -435,17 +439,17 @@ One event triggers many services.
 ```
 Payment Success
 
-↓
+â†“
 
 Topic
 
-├── Email
+â”œâ”€â”€ Email
 
-├── Loyalty
+â”œâ”€â”€ Loyalty
 
-├── Analytics
+â”œâ”€â”€ Analytics
 
-└── Invoice
+â””â”€â”€ Invoice
 ```
 
 Best for broadcasting.
@@ -459,15 +463,15 @@ Instead of storing current state, store every event.
 ```
 Account Created
 
-↓
+â†“
 
 Deposit 100
 
-↓
+â†“
 
 Withdraw 20
 
-↓
+â†“
 
 Deposit 50
 ```
@@ -556,9 +560,9 @@ Use Snapshots.
 
 ### Queue vs Pub/Sub?
 
-Queue → One Consumer
+Queue â†’ One Consumer
 
-Pub/Sub → Multiple Consumers
+Pub/Sub â†’ Multiple Consumers
 
 ### Why At Least Once?
 
@@ -580,9 +584,9 @@ Partition by key.
 
 ### Kafka vs RabbitMQ?
 
-Kafka → High throughput event streaming.
+Kafka â†’ High throughput event streaming.
 
-RabbitMQ → Traditional messaging and routing.
+RabbitMQ â†’ Traditional messaging and routing.
 
 ---
 
@@ -590,28 +594,28 @@ RabbitMQ → Traditional messaging and routing.
 
 ```
 Producer
-     │
-     ▼
+     â”‚
+     â–¼
 Message Broker
-     │
- ┌───┴──────────┐
- ▼              ▼
+     â”‚
+ â”Œâ”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+ â–¼              â–¼
 Queue         Topic
- │              │
- ▼              ▼
+ â”‚              â”‚
+ â–¼              â–¼
 Consumer    Multiple Subscribers
- │
- ▼
+ â”‚
+ â–¼
 ACK
- │
- ▼
+ â”‚
+ â–¼
 Delete
 
 Failure
- │
- ▼
+ â”‚
+ â–¼
 Retry
- │
- ▼
+ â”‚
+ â–¼
 Dead Letter Queue
 ```

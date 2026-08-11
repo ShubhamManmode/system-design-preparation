@@ -1,15 +1,23 @@
-Why Networking
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: System Design Overview
+> Docs Index: [README.md](../README.md)
+
+# System Design Overview
+
+This document introduces the core networking and distributed systems ideas that underpin the rest of the repository.
+
+## Why Networking Matters
 Networking is how different machines (clients, servers, databases, caches, external services) talk to each other over the internet or inside a data center. It turns a single-machine program into a distributed system that can serve millions of users.
 
 For system design, you need networking to:
 
-Connect users’ devices (mobile/web clients) to your backend systems.
+Connect usersâ€™ devices (mobile/web clients) to your backend systems.
 
 Connect multiple backend services to each other (microservices, databases, caches, queues).
 
 Scale horizontally by adding more servers and still keep them working together.
 
-In an architecture diagram, networking is the “lines” between boxes:
+In an architecture diagram, networking is the â€œlinesâ€ between boxes:
 
 text
 User Device (Client)  --internet-->  API Gateway / Load Balancer  -->  App Servers  -->  DB / Cache
@@ -39,7 +47,7 @@ Between them: internet, load balancers, gateways, auth, etc.
 
 Why a system designer must know this:
 
-Every system design question (URL shortener, Instagram, WhatsApp, etc.) is basically “how will clients talk to servers?”
+Every system design question (URL shortener, Instagram, WhatsApp, etc.) is basically â€œhow will clients talk to servers?â€
 
 It guides where you put logic: UI on client, business logic on server, data in DB.
 
@@ -47,7 +55,7 @@ It affects scaling: add more servers, or move some work to clients.
 
 Typical decisions:
 
-How “thin” or “thick” the client should be (more logic client-side vs server-side).
+How â€œthinâ€ or â€œthickâ€ the client should be (more logic client-side vs server-side).
 
 How to scale servers (horizontal scaling, load balancing).
 
@@ -81,7 +89,7 @@ Why system designers need it:
 
 To reason about latency: request must travel, be processed, and return.
 
-To handle failures: what if the server doesn’t respond? Retries? Timeouts?
+To handle failures: what if the server doesnâ€™t respond? Retries? Timeouts?
 
 To design APIs: resources, methods, status codes, contracts.
 
@@ -96,21 +104,21 @@ API granularity (coarse-grained vs fine-grained endpoints).
 Packet Switching
 Packet switching is how data actually travels over the network: large messages are broken into small packets, sent independently, and reassembled at the destination.
 
-You don’t need low-level details, but conceptually:
+You donâ€™t need low-level details, but conceptually:
 
 text
 Big message (e.g., JSON)
-   ↓ split
+   â†“ split
 Packet 1  Packet 2  Packet 3  ...
-   ↓ over network
+   â†“ over network
 Packets may take different paths
-   ↓ reassemble
+   â†“ reassemble
 Original message at destination
 Where it fits in system architecture:
 
-Between any two machines: client ↔ server, server ↔ server, server ↔ DB (over network).
+Between any two machines: client â†” server, server â†” server, server â†” DB (over network).
 
-It’s why networks are resilient (packets can route around failures) and imperfect (packets can be delayed, dropped, arrive out of order).
+Itâ€™s why networks are resilient (packets can route around failures) and imperfect (packets can be delayed, dropped, arrive out of order).
 
 Why system designers should know this:
 
@@ -129,13 +137,13 @@ How aggressive your retry and timeout policies should be.
 How you design idempotent APIs (safe to retry when some packets were lost).
 
 Latency
-Latency is how long it takes for a request to travel from client to server, be processed, and return. Think of it as “delay” or “response time,” usually measured in milliseconds.
+Latency is how long it takes for a request to travel from client to server, be processed, and return. Think of it as â€œdelayâ€ or â€œresponse time,â€ usually measured in milliseconds.
 
 High-level view:
 
 text
-Total latency ≈
-Network travel time (client ↔ server)
+Total latency â‰ˆ
+Network travel time (client â†” server)
 + Server processing time
 + Time in queues / load balancers / other services
 Where it fits:
@@ -146,7 +154,7 @@ Internal service-to-service calls: a slow dependency increases overall latency.
 
 Why it matters for system design:
 
-Directly affects user experience (slow responses → bad UX).
+Directly affects user experience (slow responses â†’ bad UX).
 
 Controls how many services you can chain in one request.
 
@@ -165,7 +173,7 @@ Throughput is how many requests your system can handle per unit time (e.g., requ
 
 Example:
 
-“This API handles 10,000 requests per second” → throughput = 10k RPS.
+â€œThis API handles 10,000 requests per secondâ€ â†’ throughput = 10k RPS.
 
 Where it fits:
 
@@ -177,7 +185,7 @@ Databases: how many read/write operations they support.
 
 Why system designers need it:
 
-Interviews often ask: “Can your design handle X million users/day?”
+Interviews often ask: â€œCan your design handle X million users/day?â€
 
 Throughput defines how many servers you need and how to scale.
 
@@ -192,7 +200,7 @@ Sharding or partitioning data to spread load.
 Rate limiting to protect backend from overload.
 
 Bandwidth
-Bandwidth is how much data per second your network can carry (e.g., Mbps, Gbps). Think of it as “pipe size” for data.
+Bandwidth is how much data per second your network can carry (e.g., Mbps, Gbps). Think of it as â€œpipe sizeâ€ for data.
 
 Example:
 

@@ -1,4 +1,9 @@
-# TCP vs UDP – Complete Beginner-Friendly Notes
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Resource Notes
+> Docs Index: [README.md](README.md)> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Resource Notes
+> Docs Index: [README.md](../../../README.md)
+# TCP vs UDP â€“ Complete Beginner-Friendly Notes
 
 ## Introduction
 
@@ -13,11 +18,11 @@ Both belong to the **Transport Layer (Layer 4)** of the OSI Model and sit on top
 
 ```
 Application (HTTP, DNS, FTP, SMTP)
-            │
+            â”‚
 Transport (TCP / UDP)
-            │
+            â”‚
 Internet (IP)
-            │
+            â”‚
 Network (Ethernet / Wi-Fi)
 ```
 
@@ -181,11 +186,11 @@ Every TCP packet has a sequence number.
 Example:
 
 ```
-Packet 1 → Seq = 1
+Packet 1 â†’ Seq = 1
 
-Packet 2 → Seq = 2
+Packet 2 â†’ Seq = 2
 
-Packet 3 → Seq = 3
+Packet 3 â†’ Seq = 3
 ```
 
 The receiver knows the correct order.
@@ -219,11 +224,11 @@ ACK 2 means:
 Suppose Packet 2 is lost.
 
 ```
-Packet 1 ✔
+Packet 1 âœ”
 
-Packet 2 ❌ Lost
+Packet 2 âŒ Lost
 
-Packet 3 ✔
+Packet 3 âœ”
 ```
 
 The receiver notices packet 2 is missing and asks the sender to resend it.
@@ -485,13 +490,13 @@ Players prefer smooth gameplay over perfect packet delivery.
 During a video call:
 
 ```
-Frame 1 ✔
+Frame 1 âœ”
 
-Frame 2 ✔
+Frame 2 âœ”
 
-Frame 3 ❌ Lost
+Frame 3 âŒ Lost
 
-Frame 4 ✔
+Frame 4 âœ”
 ```
 
 If Frame 3 disappears, you may notice a tiny glitch, but the conversation continues.
@@ -502,7 +507,7 @@ Waiting for retransmission would create an obvious pause.
 
 # Why Banking Uses TCP
 
-Suppose you're transferring ₹10,000.
+Suppose you're transferring â‚¹10,000.
 
 The transfer request **must** reach the bank.
 
@@ -620,4 +625,5 @@ Think of it this way:
 * **TCP** is like sending an important legal document by registered courier. You track it, require a signature, and resend it if necessary.
 * **UDP** is like speaking during a live conversation. If you miss one word, you continue talking instead of repeating the entire sentence.
 
-Understanding this trade-off—**reliability versus latency**—is the foundation for choosing the right transport protocol in networking and system design.
+Understanding this trade-offâ€”**reliability versus latency**â€”is the foundation for choosing the right transport protocol in networking and system design.
+

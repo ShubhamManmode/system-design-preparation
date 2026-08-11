@@ -1,3 +1,6 @@
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: System Design Notes
+> Docs Index: [README.md](README.md)
 Consistent Hashing
 
 1. What is Consistent Hashing?
@@ -40,7 +43,7 @@ The problem is that when the number of nodes changes, the mapping of many keys c
 
 Consistent hashing solves this problem by placing both keys and nodes on a hash ring.
 
-⸻
+â¸»
 
 2. Why Consistent Hashing?
 
@@ -59,9 +62,9 @@ Where:
 Suppose:
 
 N = 3
-hash("A") % 3 = 0 → Node 0
-hash("B") % 3 = 1 → Node 1
-hash("C") % 3 = 2 → Node 2
+hash("A") % 3 = 0 â†’ Node 0
+hash("B") % 3 = 1 â†’ Node 1
+hash("C") % 3 = 2 â†’ Node 2
 
 Now suppose we add another node:
 
@@ -79,19 +82,19 @@ Example
 
 Before:
 
-A → Node 0
-B → Node 1
-C → Node 2
-D → Node 0
-E → Node 1
+A â†’ Node 0
+B â†’ Node 1
+C â†’ Node 2
+D â†’ Node 0
+E â†’ Node 1
 
 After adding Node 3:
 
-A → Node 2
-B → Node 0
-C → Node 1
-D → Node 3
-E → Node 2
+A â†’ Node 2
+B â†’ Node 0
+C â†’ Node 1
+D â†’ Node 3
+E â†’ Node 2
 
 A large number of keys need to move.
 
@@ -103,7 +106,7 @@ This creates:
 * Increased latency
 * Expensive rebalancing
 
-⸻
+â¸»
 
 3. How Consistent Hashing Solves This
 
@@ -137,7 +140,7 @@ Main Idea
 
 Each key is assigned to the next node clockwise on the ring.
 
-⸻
+â¸»
 
 4. Hash Ring
 
@@ -145,7 +148,7 @@ A hash ring is a circular representation of the hash space.
 
 Suppose our hash function produces values between:
 
-0 → 999
+0 â†’ 999
 
 Instead of treating this as a straight line:
 
@@ -164,13 +167,13 @@ we connect the end back to the beginning:
 
 So:
 
-999 → 0
+999 â†’ 0
 
 are adjacent.
 
 This creates a circular structure called a Hash Ring.
 
-⸻
+â¸»
 
 5. Placing Nodes on the Hash Ring
 
@@ -210,33 +213,33 @@ We move clockwise from each key until we find the first node.
 
 Therefore:
 
-Key1 → Node B
-Key2 → Node C
-Key3 → Node A
+Key1 â†’ Node B
+Key2 â†’ Node C
+Key3 â†’ Node A
 
 Why does Key3 go to Node A?
 
 Because:
 
-800 → 999 → 0 → 100
+800 â†’ 999 â†’ 0 â†’ 100
 
 The ring wraps around.
 
-⸻
+â¸»
 
 6. Data Distribution
 
 The basic rule is:
 
-A key belongs to the first node encountered when moving clockwise from the key’s position on the hash ring.
+A key belongs to the first node encountered when moving clockwise from the keyâ€™s position on the hash ring.
 
 Example:
 
 Hash Ring
        Key1
-        ↓
-   150 --------→ Node B (400)
-                    ↓
+        â†“
+   150 --------â†’ Node B (400)
+                    â†“
                   Node C
 
 If:
@@ -246,7 +249,7 @@ hash(Node B) = 400
 
 then:
 
-Key1 → Node B
+Key1 â†’ Node B
 
 Another Example
 
@@ -260,19 +263,19 @@ Key4 = 800
 
 Mapping:
 
-Key1 = 50  → Node A
-Key2 = 200 → Node B
-Key3 = 500 → Node C
-Key4 = 800 → Node A
+Key1 = 50  â†’ Node A
+Key2 = 200 â†’ Node B
+Key3 = 500 â†’ Node C
+Key4 = 800 â†’ Node A
 
 Because:
 
-50 → 100       → Node A
-200 → 400      → Node B
-500 → 700      → Node C
-800 → 100 wrap → Node A
+50 â†’ 100       â†’ Node A
+200 â†’ 400      â†’ Node B
+500 â†’ 700      â†’ Node C
+800 â†’ 100 wrap â†’ Node A
 
-⸻
+â¸»
 
 7. Node Addition
 
@@ -290,18 +293,18 @@ Node D = 550
 
 Before:
 
-400 → Node B
-700 → Node C
+400 â†’ Node B
+700 â†’ Node C
 
 After adding Node D:
 
-400 → Node B
-550 → Node D
-700 → Node C
+400 â†’ Node B
+550 â†’ Node D
+700 â†’ Node C
 
 Only the keys between:
 
-Node B → Node D
+Node B â†’ Node D
 
 need to move.
 
@@ -310,17 +313,17 @@ Before
 Key1
 Key2
 Key3
-   ↓
+   â†“
 Node C
 
 After
 
 Key1
 Key2
-   ↓
+   â†“
 Node D
 Key3
-   ↓
+   â†“
 Node C
 
 We do not need to redistribute all keys.
@@ -328,14 +331,14 @@ We do not need to redistribute all keys.
 Key Point
 
 Adding one node
-        ↓
+        â†“
 Only nearby keys are affected
-        ↓
+        â†“
 Small amount of data movement
 
 This is the main reason consistent hashing is useful in distributed systems.
 
-⸻
+â¸»
 
 8. Node Removal
 
@@ -361,20 +364,20 @@ those keys are reassigned to Node C.
 
 Before
 
-Node A → keys
-Node B → keys
-Node C → keys
+Node A â†’ keys
+Node B â†’ keys
+Node C â†’ keys
 
 After removing Node B
 
-Node A → same keys
-Node C → Node C's old keys + Node B's keys
+Node A â†’ same keys
+Node C â†’ Node C's old keys + Node B's keys
 
 The important point is:
 
-We don’t redistribute every key. Only the keys owned by the removed node need to move.
+We donâ€™t redistribute every key. Only the keys owned by the removed node need to move.
 
-⸻
+â¸»
 
 9. Rebalancing
 
@@ -398,38 +401,38 @@ changing N can cause many keys to move.
 
 Before:
 N = 3
-Key → Node 0
-Key → Node 1
-Key → Node 2
+Key â†’ Node 0
+Key â†’ Node 1
+Key â†’ Node 2
 After:
 N = 4
-Many keys → different nodes
+Many keys â†’ different nodes
 
 This can cause significant rebalancing.
 
-⸻
+â¸»
 
 Consistent Hashing
 
 With consistent hashing:
 
 Add Node
-   ↓
+   â†“
 Only nearby hash-ring range changes
-   ↓
+   â†“
 Only those keys are moved
 
 Therefore:
 
 Less data movement
-        ↓
+        â†“
 Less network traffic
-        ↓
+        â†“
 Less cache invalidation
-        ↓
+        â†“
 Better scalability
 
-⸻
+â¸»
 
 10. Problem with Basic Consistent Hashing
 
@@ -450,13 +453,13 @@ The ranges are very uneven.
 
 For example:
 
-900 → 100
+900 â†’ 100
 
 is a large range.
 
 While:
 
-100 → 200
+100 â†’ 200
 
 is a small range.
 
@@ -468,7 +471,7 @@ The solution is:
 
 Virtual Nodes
 
-⸻
+â¸»
 
 11. Virtual Nodes
 
@@ -481,7 +484,7 @@ Virtual Nodes (vnodes)
 For example:
 
 Physical Node A
-    ↓
+    â†“
 A1
 A2
 A3
@@ -492,19 +495,19 @@ Each virtual node gets a different hash position.
 
 Example:
 
-A1 → 100
-A2 → 350
-A3 → 600
-B1 → 200
-B2 → 450
-B3 → 800
-C1 → 50
-C2 → 300
-C3 → 700
+A1 â†’ 100
+A2 â†’ 350
+A3 â†’ 600
+B1 â†’ 200
+B2 â†’ 450
+B3 â†’ 800
+C1 â†’ 50
+C2 â†’ 300
+C3 â†’ 700
 
 Now the ring looks much more evenly distributed.
 
-⸻
+â¸»
 
 12. Why Virtual Nodes?
 
@@ -524,7 +527,7 @@ The physical nodes are spread across the entire ring.
 
 This reduces the possibility of one node receiving too much traffic or data.
 
-⸻
+â¸»
 
 13. Virtual Nodes and Node Addition
 
@@ -559,21 +562,21 @@ Instead of taking one large continuous range, it takes many smaller ranges.
 Without Virtual Nodes
 
 Node D
-   ↓
+   â†“
 One large range
 
 With Virtual Nodes
 
-D1 → small range
-D2 → small range
-D3 → small range
-D4 → small range
+D1 â†’ small range
+D2 â†’ small range
+D3 â†’ small range
+D4 â†’ small range
 ...
-D100 → small range
+D100 â†’ small range
 
 This generally produces better balancing.
 
-⸻
+â¸»
 
 14. Node Removal with Virtual Nodes
 
@@ -591,17 +594,17 @@ B100
 
 If Node B fails:
 
-B1 → next physical node
-B2 → next physical node
-B3 → next physical node
+B1 â†’ next physical node
+B2 â†’ next physical node
+B3 â†’ next physical node
 ...
-B100 → next physical node
+B100 â†’ next physical node
 
-The data previously owned by B’s virtual nodes gets distributed across neighboring physical nodes.
+The data previously owned by Bâ€™s virtual nodes gets distributed across neighboring physical nodes.
 
 Therefore, failure of one physical node does not necessarily overload only one other node.
 
-⸻
+â¸»
 
 15. Data Distribution
 
@@ -638,7 +641,7 @@ C1 C2 C3 C4
 
 This makes the distribution more uniform.
 
-⸻
+â¸»
 
 16. Complete Flow
 
@@ -647,47 +650,47 @@ When storing or retrieving data:
 Client
    |
    | Key = "user:123"
-   ↓
+   â†“
 Hash(key)
    |
-   ↓
+   â†“
 Hash Ring
    |
-   ↓
+   â†“
 Find first virtual node clockwise
    |
-   ↓
+   â†“
 Virtual Node
    |
-   ↓
+   â†“
 Physical Node
    |
-   ↓
+   â†“
 Store / Read Data
 
 For example:
 
 "user:123"
      |
-     ↓
+     â†“
 Hash
      |
-     ↓
+     â†“
 Position = 450
      |
-     ↓
+     â†“
 Clockwise search
      |
-     ↓
+     â†“
 Virtual Node B7
      |
-     ↓
+     â†“
 Physical Node B
      |
-     ↓
+     â†“
 Redis / Database
 
-⸻
+â¸»
 
 17. Consistent Hashing vs Modulo Hashing
 
@@ -700,7 +703,7 @@ Distribution	Can be good	Improved with virtual nodes
 Scalability	Poor when N changes frequently	Better
 Complexity	Simple	More complex
 
-⸻
+â¸»
 
 18. Important Interview Question
 
@@ -712,15 +715,15 @@ In consistent hashing, the new node is placed at one or more positions on the ha
 
 With virtual nodes, the new physical node gets multiple positions on the ring, so its data is taken from many smaller ranges.
 
-⸻
+â¸»
 
 19. What happens when a node is removed?
 
 Answer:
 
-When a node is removed, the keys mapped to that node’s hash-ring ranges are reassigned to the next available nodes in the clockwise direction. Only those affected keys need to move rather than the entire dataset.
+When a node is removed, the keys mapped to that nodeâ€™s hash-ring ranges are reassigned to the next available nodes in the clockwise direction. Only those affected keys need to move rather than the entire dataset.
 
-⸻
+â¸»
 
 20. Mental Model
 
@@ -739,44 +742,44 @@ Remember consistent hashing using this simple model:
 Key
 
 Key
- ↓
+ â†“
 Hash
- ↓
+ â†“
 Position on Ring
- ↓
+ â†“
 Move Clockwise
- ↓
+ â†“
 First Node
- ↓
+ â†“
 Store / Read
 
 Node Addition
 
 Add Node
-   ↓
+   â†“
 New position(s) on ring
-   ↓
+   â†“
 Only nearby keys move
 
 Node Removal
 
 Remove Node
-   ↓
+   â†“
 Its keys move to next node(s)
-   ↓
+   â†“
 Other keys remain unchanged
 
 Virtual Nodes
 
 Physical Node
-      ↓
+      â†“
 Multiple virtual nodes
-      ↓
+      â†“
 Spread around ring
-      ↓
+      â†“
 Better distribution
 
-⸻
+â¸»
 
 21. Where is Consistent Hashing Used?
 
@@ -810,7 +813,7 @@ Load Distribution
 
 Requests can be mapped consistently to nodes, especially when maintaining affinity is useful.
 
-⸻
+â¸»
 
 22. Key Takeaways
 
@@ -845,11 +848,11 @@ Consistent hashing distributes keys across a changing set of nodes while minimiz
 Most important concepts to remember
 
 Hash Ring
-    ↓
+    â†“
 Clockwise lookup
-    ↓
+    â†“
 Minimal data movement
-    ↓
+    â†“
 Virtual Nodes
-    ↓
+    â†“
 Better distribution

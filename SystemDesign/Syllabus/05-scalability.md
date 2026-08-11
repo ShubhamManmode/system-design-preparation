@@ -1,4 +1,12 @@
-# Scalability, Availability & Reliability & Consistency
+﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
+> Topic: Syllabus Chapter
+> Docs Index: [README.md](../../README.md)
+
+# Scalability, Availability, Reliability, and Consistency
+
+This chapter explains the concepts behind scaling systems while preserving availability and consistency.
+
+## 1. Scalability
 
     1. Scalability
         What is Scalability?
@@ -181,3 +189,4 @@
             Self-Healing
             Disaster Recovery
             Checkpointing
+
