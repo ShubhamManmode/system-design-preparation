@@ -70,11 +70,3 @@
         Distributed Tracing
         Log Aggregation
         Metrics Collection
-
-    12. Real-world Examples
-        Netflix
-        Google
-        Uber
-        Amazon
-
-    13. Interview Problems
