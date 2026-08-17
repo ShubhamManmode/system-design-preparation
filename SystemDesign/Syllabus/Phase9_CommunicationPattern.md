@@ -1,7 +1,4 @@
-﻿> Repository: [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
-> Topic: System Design Notes
-> Docs Index: [README.md](README.md)
-# Communication Patterns
+﻿# Communication Patterns
 
     1. Communication Fundamentals
         Synchronous Communication
@@ -97,11 +94,3 @@
         Routing Slip
         Message Translator
 
-    15. Real-world Examples
-        WhatsApp
-        Uber
-        Netflix
-        Amazon
-        Stripe
-
-    16. Interview Problems
