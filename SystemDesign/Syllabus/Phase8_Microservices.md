@@ -86,17 +86,6 @@
         mTLS
         Secrets Management
 
-
-    13. Implementations
-        ASP.NET Core
-        Spring Boot
-        Docker
-        Kubernetes
-        Istio
-        Envoy
-        Azure Kubernetes Service (AKS)
-        Amazon EKS
-
     14. Design Patterns
         API Gateway
         Backend for Frontend (BFF)
@@ -116,12 +105,3 @@
         Versioning
         Monitoring
         Debugging
-
-    16. Real-world Examples
-        Netflix
-        Amazon
-        Uber
-        Spotify
-        Airbnb
-
-    17. Interview Problems
