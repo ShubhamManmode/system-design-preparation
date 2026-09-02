@@ -4,7 +4,15 @@
 
 # Reverse Proxy
 
-## 1. Fundamentals & Internal Working
+## Contents
+
+- [Fundamentals and Internal Working](#1-fundamentals-and-internal-working)
+- [Key Features](#2-key-features)
+- [Tool Implementation Comparison](#3-tool-implementation-comparison)
+- [Architectural Patterns](#4-architectural-patterns)
+- [System Design Interview Tips](#system-design-interview-tips)
+
+## 1. Fundamentals and Internal Working
 
 ### Core Concept
 A **Reverse Proxy** is an intermediary gateway sitting in front of one or more backend servers. It receives external client requests and forwards them to private upstream servers.
@@ -23,7 +31,7 @@ Modern enterprise reverse proxies (such as **NGINX** or **Envoy**) do **not** us
 
 ## 2. Key Features
 
-### ðŸš¦ Advanced Routing
+### Advanced Routing
 Directs incoming traffic dynamically based on Layer 7 HTTP metadata:
 * **Path-Based Routing:**  
   * `/api/v1/users` $\rightarrow$ User Microservice
@@ -31,20 +39,20 @@ Directs incoming traffic dynamically based on Layer 7 HTTP metadata:
 * **Host-Based (Virtual Hosting):** Routes based on the HTTP `Host` header (e.g., `app.domain.com` vs. `admin.domain.com`).
 * **Header/Cookie Injection:** Routes matching requests (e.g., `Cookie: beta_tester=true`) to internal canary or staging environments.
 
-### ðŸ”’ SSL/TLS Termination & Offloading
+### SSL/TLS Termination and Offloading
 * **Mechanism:** Handles the computationally expensive asymmetric TLS handshake with public clients at the edge proxy level.
 * **Benefit:** Offloads crypto-processing CPU cycles from application nodes. Internal communication within the private VPC can use plain HTTP or lightweight internal mTLS.
 
-### âš¡ Response Compression
+### Response Compression
 * Automatically compresses HTTP response bodies using algorithms like **Gzip** or **Brotli** before sending data over the WAN, lowering network transfer sizes by up to 70%.
 
-### ðŸ”„ URL Rewriting & Header Manipulation
+### URL Rewriting and Header Manipulation
 * **URL Sanitization/Stripping:** Modifies URI paths (e.g., converts incoming public `/api/v1/orders/88` to private `/orders/88`).
 * **Header Enrichment:** Attaches essential metadata like:
   * `X-Forwarded-For`: Tracks the true origin client IP.
   * `X-Request-ID`: Injects a unique UUID for end-to-end distributed tracing.
 
-### ðŸ’¾ Edge Caching
+### Edge Caching
 * Serves static assets (images, JS, CSS) or cacheable REST endpoints directly from RAM/SSD without hitting upstream application servers.
 * Leverages HTTP freshness headers (`ETag`, `Cache-Control`, `If-Modified-Since`) to handle cache validation.
 
@@ -75,13 +83,15 @@ Positions at the perimeter of a region or data center. Handles boundary security
 ### C. Sidecar Proxy (Service Mesh)
 Deployed alongside an application container within the same pod/host boundary, sharing the `localhost` network namespace.
 
+```text
 [ North-South Public Traffic ]
-                 â”‚
-                 â–¼
-       â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-       â”‚    Edge Proxy    â”‚
-       â””â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                â”‚
+                 |
+                 v
+       +-----------------------+
+       |      Edge Proxy       |
+       +-----------+-----------+
+                   |
+```
 
 
 * **North-South Traffic:** External public user requests entering the infrastructure.
@@ -89,16 +99,16 @@ Deployed alongside an application container within the same pod/host boundary, s
 
 ---
 
-## ðŸ’¡ System Design Interview: Tips & Tricks
+## System Design Interview Tips
 
-### ðŸŽ¯ Pro-Tip 1: Eliminating Single Points of Failure (SPOF)
+### Pro Tip 1: Eliminate Single Points of Failure (SPOF)
 Never place a standalone reverse proxy in a system design diagram without high availability (HA). Always pair reverse proxies behind:
 * A Layer 4 Network Load Balancer (AWS NLB), OR
 * A Virtual IP setup using **keepalived / VRRP** for active-passive or active-active proxy failover.
 
-### ðŸŽ¯ Pro-Tip 2: Ephemeral Port Exhaustion
+### Pro Tip 2: Avoid Ephemeral Port Exhaustion
 When a high-throughput proxy forwards millions of requests to a single backend IP, it can exhaust available outbound TCP ports (maximum ~65,535 ports per destination IP address).
 * **Interview Fix:** Explicitly state that you will configure **HTTP Keep-Alive connection pooling** between the proxy and backend servers to reuse open TCP sockets instead of creating a new socket per request.
 
-### ðŸŽ¯ Pro-Tip 3: `X-Forwarded-For` Security & Spoofing
+### Pro Tip 3: Secure `X-Forwarded-For` Against Spoofing
 Because any client can send a fake `X-Forwarded-For: 127.0.0.1` header, backend services must **never trust incoming client headers directly**. Mention that backend application tiers must strip or override this header using only values set by the trusted perimeter Edge Proxy.
