@@ -1,15 +1,31 @@
-Repository: system-design-preparation
-Topic: System Design Notes
-Docs Index: README.md
+# Consistency in Distributed Systems
+---
 
-6. Consistency
+## Comparison and Decision Guide
 
-Consistency is a fundamental concept in distributed systems that defines what value a client should see when reading data after writes happen across multiple nodes.
+### Read Repair vs Anti-Entropy
+**Repository:** system-design-preparation<br>
+**Topic:** System Design Notes<br>
+**Docs index:** [README.md](../../../README.md)
+---
 
+### Consistency Models Comparison
+- [What Is Consistency?](#what-is-consistency)
+- [Consistency Models](#consistency-models)
+- [Replication Mechanisms](#replication-mechanisms)
+- [Comparison and Decision Guide](#comparison-and-decision-guide)
+- [Implementation Guide](#implementation-guide)
+---
+
+### Quorum Concepts Together
+### What Is Consistency?
+---
+
+### How These Concepts Fit Together
 In a distributed system, the same data may exist on multiple servers because of replication.
+---
 
-                 ┌───────────────┐
-                 │    Client     │
+### Key Takeaways
                  └───────┬───────┘
                          │
                   Write: balance=100
@@ -30,9 +46,7 @@ If a client reads from Replica 2 immediately after the write, it might see 90 in
 
 Consistency defines the guarantees around such situations.
 
-⸻
-
-1. What Is Consistency?
+---
 
 Consistency answers:
 
@@ -61,9 +75,9 @@ Consistency is especially important when data is:
 * Geographically distributed
 * Asynchronously updated
 
-⸻
+---
 
-2. Strong Consistency
+### Strong Consistency
 
 Strong consistency guarantees that once a write is acknowledged, subsequent reads return the latest value.
 
@@ -147,9 +161,9 @@ Common Use Cases
 * Account balances
 * Stock trading
 
-⸻
+---
 
-3. Weak Consistency
+### Weak Consistency
 
 Weak consistency does not guarantee that a read immediately after a write will return the latest value.
 
@@ -191,9 +205,9 @@ Good For
 * Recommendations
 * Non-critical data
 
-⸻
+---
 
-4. Eventual Consistency
+### Eventual Consistency
 
 Eventual consistency guarantees:
 
@@ -267,9 +281,9 @@ Common Examples
 * DNS
 * Distributed caches
 
-⸻
+---
 
-5. Causal Consistency
+### Causal Consistency
 
 Causal consistency guarantees that causally related operations are observed in the same order by all nodes.
 
@@ -330,9 +344,9 @@ B → A
 
 as long as causal relationships are preserved.
 
-⸻
+---
 
-6. Read-Your-Writes Consistency
+### Read-Your-Writes Consistency
 
 Read-your-writes consistency guarantees:
 
@@ -380,9 +394,9 @@ The system can:
 * Use replication tokens/version numbers
 * Ensure the replica catches up before serving the read
 
-⸻
+---
 
-7. Monotonic Reads
+### Monotonic Reads
 
 Monotonic reads guarantee:
 
@@ -426,9 +440,9 @@ Observed versions:
 
 The version observed by a client should move forward or stay the same.
 
-⸻
+---
 
-8. Monotonic Writes
+### Monotonic Writes
 
 Monotonic writes guarantee:
 
@@ -473,9 +487,9 @@ Systems can use:
 * Leader-based writes
 * Timestamps/version numbers
 
-⸻
+---
 
-9. Session Consistency
+### Session Consistency
 
 Session consistency provides consistency guarantees within a user’s session.
 
@@ -510,9 +524,9 @@ iPhone is still there
 
 Even if the underlying system uses eventual consistency, session guarantees can prevent the user from seeing confusing results.
 
-⸻
+---
 
-10. Linearizability
+### Linearizability
 
 Linearizability is one of the strongest consistency guarantees.
 
@@ -567,9 +581,9 @@ Linearizability provides:
 * Atomic operations
 * Latest-value semantics
 
-⸻
+---
 
-11. Sequential Consistency
+### Sequential Consistency
 
 Sequential consistency guarantees:
 
@@ -607,9 +621,11 @@ Sequential Consistency:
     Does NOT necessarily preserve:
     Real-time ordering across clients
 
-⸻
+---
 
-12. Quorum Reads
+## Replication Mechanisms
+
+### Quorum Reads
 
 Quorum reads are used in replicated databases to determine how many replicas should participate in a read.
 
@@ -669,9 +685,9 @@ Less consistency
 Higher availability
 Lower latency
 
-⸻
+---
 
-13. Quorum Writes
+### Quorum Writes
 
 A quorum write requires a write to be acknowledged by a minimum number of replicas.
 
@@ -707,9 +723,9 @@ R + W > N
 
 Therefore, read and write quorums overlap.
 
-⸻
+---
 
-14. Read Repair
+### Read Repair
 
 Read repair is a technique used to fix stale replicas during a read operation.
 
@@ -757,9 +773,9 @@ Disadvantages
 * Adds work/latency to reads
 * Rarely-read data may remain stale
 
-⸻
+---
 
-15. Anti-Entropy
+### Anti-Entropy
 
 Anti-entropy is a background process used to synchronize replicas.
 
@@ -804,36 +820,40 @@ Find affected subtree
 
 This makes synchronization much more efficient.
 
-⸻
+---
 
-Read Repair vs Anti-Entropy
+## Comparison and Decision Guide
 
-Feature	Read Repair	Anti-Entropy
-Trigger	Read operation	Background process
-Requires client read?	Yes	No
-Repairs stale data	Yes	Yes
-Works on rarely-read data	Not reliably	Yes
-Impact on reads	Can add latency	Minimal
-Typical mechanism	Compare read responses	Hash/Merkle tree comparison
+### Read Repair vs Anti-Entropy
 
-⸻
+| Feature | Read Repair | Anti-Entropy |
+| --- | --- | --- |
+| Trigger | Read operation | Background process |
+| Requires client read? | Yes | No |
+| Repairs stale data | Yes | Yes |
+| Works on rarely-read data | Not reliably | Yes |
+| Impact on reads | Can add latency | Minimal |
+| Typical mechanism | Compare read responses | Hash/Merkle tree comparison |
 
-Consistency Models Comparison
+---
 
-Model	Main Guarantee	Can Read Stale Data?
-Weak	Minimal guarantees	Yes
-Eventual	Eventually replicas converge	Yes
-Causal	Preserves causal ordering	Yes, depending on system
-Read-Your-Writes	Client sees its own writes	Not its own older version
-Monotonic Reads	Reads never move backward	Limited
-Monotonic Writes	Client writes preserve order	N/A
-Session	Guarantees within session	Depends on guarantees
-Sequential	Global sequential order exists	Depends
-Linearizability	Latest value + real-time ordering	No after completed write
+### Consistency Models Comparison
 
-⸻
+| Model | Main guarantee | Can read stale data? |
+| --- | --- | --- |
+| Weak | Minimal guarantees | Yes |
+| Eventual | Eventually replicas converge | Yes |
+| Causal | Preserves causal ordering | Yes, depending on system |
+| Read-your-writes | Client sees its own writes | Not its own older version |
+| Monotonic reads | Reads never move backward | Limited |
+| Monotonic writes | Client writes preserve order | N/A |
+| Session | Guarantees within session | Depends on guarantees |
+| Sequential | Global sequential order exists | Depends |
+| Linearizability | Latest value and real-time ordering | No after completed write |
 
-Quorum Concepts Together
+---
+
+### Quorum Concepts Together
 
 For replicated storage:
 
@@ -874,9 +894,9 @@ R + W > N
 
 Therefore, the read quorum and write quorum overlap.
 
-⸻
+---
 
-How These Concepts Fit Together
+### How These Concepts Fit Together
 
 A useful mental model is:
 
@@ -895,9 +915,9 @@ A useful mental model is:
        ├── Sequential
        └── Linearizable
 
-⸻
+---
 
-Interview Mental Model
+### Interview Mental Model
 
 When asked about consistency in system design, think in this order:
 
@@ -919,7 +939,7 @@ When asked about consistency in system design, think in this order:
         ↓
 9. Anti-Entropy?
 
-Simple Decision Guide
+### Simple Decision Guide
 
 Financial transaction
         ↓
@@ -938,9 +958,9 @@ Distributed replicated DB
         ↓
 Quorum + Read Repair + Anti-Entropy
 
-⸻
+---
 
-Key Takeaways
+### Key Takeaways
 
 Strong Consistency
 
@@ -1011,13 +1031,15 @@ Repair replicas
 
 ---
 
-How To Implement Each Consistency Guarantee
+## Implementation Guide
+
+### How To Implement Each Consistency Guarantee
 
 The examples below assume that every stored value includes a version,
 revision, or logical timestamp. Replicas should return the value and its
 version so the coordinator can compare responses safely.
 
-1. Strong Consistency
+#### Strong Consistency
 
 * Send writes to a leader or consensus group.
 * Replicate to the required majority before acknowledging the write.
@@ -1033,7 +1055,7 @@ WRITE:
 READ:
         return read_from_leader_or_committed_quorum(key)
 
-2. Weak Consistency
+#### Weak Consistency
 
 * Write to the nearest available replica.
 * Acknowledge after the local write without waiting for replication.
@@ -1045,7 +1067,7 @@ WRITE:
         acknowledge_immediately()
         replicate_asynchronously(key, value)
 
-3. Eventual Consistency
+#### Eventual Consistency
 
 * Write locally and add the update to a durable log or outbox.
 * Replicas consume the log and apply updates idempotently.
@@ -1063,7 +1085,7 @@ REPLICA:
         if update.version_is_newer_than(local_value.version):
                 apply(update)
 
-4. Causal Consistency
+#### Causal Consistency
 
 * Carry causal context with each request using a vector clock or dependency
   token.
@@ -1076,7 +1098,7 @@ WRITE:
         version = increment_vector_clock(request.causal_context, client_id)
         store(key, value, version, request.causal_context)
 
-5. Read-Your-Writes Consistency
+#### Read-Your-Writes Consistency
 
 * Return a commit version or replication token after each successful write.
 * Store the token in the client session, cookie, or session service.
@@ -1090,7 +1112,7 @@ WRITE:
 READ:
         return read_from_replica_at_least(key, session.minimum_version[key])
 
-6. Monotonic Reads
+#### Monotonic Reads
 
 * Return the version observed by every read.
 * Store the greatest observed version in the session.
@@ -1103,7 +1125,7 @@ READ:
         session.last_seen_version[key] = max(minimum, result.version)
         return result
 
-7. Monotonic Writes
+#### Monotonic Writes
 
 * Assign each client or session an increasing sequence number.
 * Include the sequence number with every write.
@@ -1118,7 +1140,7 @@ CONSUMER:
         wait_until(last_applied(key) == sequence - 1)
         apply(key, value, sequence)
 
-8. Session Consistency
+#### Session Consistency
 
 * Create a session context containing the guarantees required by the product.
 * Track a write token, read version, write sequence, and causal dependencies.
@@ -1127,7 +1149,7 @@ CONSUMER:
   writes-follow-reads at the storage coordinator.
 * Preserve the context when the user moves between application servers.
 
-9. Linearizability
+#### Linearizability
 
 * Use one leader or a consensus protocol such as Raft or Paxos.
 * Serialize conflicting operations through the leader's committed log.
@@ -1138,7 +1160,7 @@ CONSUMER:
 A quorum acknowledgement alone is insufficient if a stale replica can answer
 the following read.
 
-10. Sequential Consistency
+#### Sequential Consistency
 
 * Preserve each client's operation order with sequence numbers or a session
   queue.
@@ -1147,7 +1169,7 @@ the following read.
 * Apply and expose results according to that order.
 * Real-time ordering between different clients is not required.
 
-11. Quorum Reads
+#### Quorum Reads
 
 * Send the read to N replicas and wait for R responses.
 * Select the value with the highest valid version, or merge versions when the
@@ -1161,7 +1183,7 @@ READ:
         repair_stale_replicas(responses, latest)
         return latest
 
-12. Quorum Writes
+#### Quorum Writes
 
 * Generate one version for the write at the coordinator.
 * Send the versioned value to N replicas.
@@ -1176,14 +1198,14 @@ WRITE:
         else:
                 return retryable_failure()
 
-13. Read Repair
+#### Read Repair
 
 * Compare versions from all replicas during a quorum read.
 * Select the authoritative version using the conflict-resolution rule.
 * Asynchronously write that version to replicas with older values.
 * Make repair idempotent and rate-limit it so reads do not overload storage.
 
-14. Anti-Entropy
+#### Anti-Entropy
 
 * Run a scheduled job that compares replica ranges or partitions.
 * Compare checksums, version maps, or Merkle-tree nodes instead of every row.
@@ -1197,7 +1219,7 @@ REPAIR:
                 updates = exchange_versioned_records(range)
                 apply_newer_updates(updates)
 
-Implementation Checklist
+### Implementation Checklist
 
 For every consistency requirement, decide:
 
