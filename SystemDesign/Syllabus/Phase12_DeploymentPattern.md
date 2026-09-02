@@ -84,12 +84,6 @@
         Feature Toggle
         GitOps
 
-    13. Real-world Examples
-        Netflix
-        Amazon
-        Google
-        Facebook
-        Spotify
 
     14. Trade-offs
         Risk vs Speed
