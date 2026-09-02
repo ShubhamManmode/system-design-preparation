@@ -106,8 +106,39 @@ Disadvantages
 * Higher latency
 * More coordination between nodes
 * Lower availability during network failures
+
+Common Technique: Merkle Trees
+
+Distributed databases can use Merkle trees to efficiently determine which portions of data differ between replicas.
+
+Instead of comparing every record:
+
+10 million records
+
+the system can compare hashes.
+
+Replica A              Replica B
+        Root Hash              Root Hash
+                 │                      │
+         compare                 compare
+                 │                      │
+         mismatch               mismatch
+                 │
+                 ▼
+Find affected subtree
+
+This makes synchronization much more efficient.
+
 * More expensive in geographically distributed systems
 
+
+For every consistency requirement, decide:
+
+1. Where is the operation ordered: leader, sequencer, partition, or client?
+2. What metadata identifies order: revision, token, sequence, or vector clock?
+3. When is a write acknowledged: local write, quorum, or committed log?
+4. Which replica may answer a read, and what minimum version is required?
+5. How are conflicts, retries, missed messages, and stale replicas repaired?
 Common Use Cases
 
 * Banking
@@ -977,3 +1008,201 @@ Background synchronization
 Find differences
         ↓
 Repair replicas
+
+---
+
+How To Implement Each Consistency Guarantee
+
+The examples below assume that every stored value includes a version,
+revision, or logical timestamp. Replicas should return the value and its
+version so the coordinator can compare responses safely.
+
+1. Strong Consistency
+
+* Send writes to a leader or consensus group.
+* Replicate to the required majority before acknowledging the write.
+* Route reads to the leader, or to a quorum that includes the committed value.
+* Reject or retry writes when the required quorum is unavailable.
+
+WRITE:
+        leader = route_to_leader(key)
+        revision = leader.next_revision()
+        replicate_to_majority(key, value, revision)
+        acknowledge_after_commit(revision)
+
+READ:
+        return read_from_leader_or_committed_quorum(key)
+
+2. Weak Consistency
+
+* Write to the nearest available replica.
+* Acknowledge after the local write without waiting for replication.
+* Read from any available replica.
+* Let the application tolerate stale or missing data.
+
+WRITE:
+        local_replica.write(key, value)
+        acknowledge_immediately()
+        replicate_asynchronously(key, value)
+
+3. Eventual Consistency
+
+* Write locally and add the update to a durable log or outbox.
+* Replicas consume the log and apply updates idempotently.
+* Attach a version to every update and define conflict resolution, such as
+  last-write-wins, a deterministic merge, or an application-specific merge.
+* Retry failed replication and use anti-entropy to recover missed messages.
+
+WRITE:
+        version = create_version()
+        local_replica.put(key, value, version)
+        outbox.append(key, value, version)
+
+REPLICA:
+        update = consume_with_retry()
+        if update.version_is_newer_than(local_value.version):
+                apply(update)
+
+4. Causal Consistency
+
+* Carry causal context with each request using a vector clock or dependency
+  token.
+* Record the context as the dependencies of every new write.
+* Expose a write only after all of its dependencies are visible.
+* Merge the client's context after every successful read and write.
+
+WRITE:
+        wait_until_dependencies_visible(request.causal_context)
+        version = increment_vector_clock(request.causal_context, client_id)
+        store(key, value, version, request.causal_context)
+
+5. Read-Your-Writes Consistency
+
+* Return a commit version or replication token after each successful write.
+* Store the token in the client session, cookie, or session service.
+* Route later reads to a replica at or beyond that token.
+* Wait, route to the leader, or return a retryable response if no replica is
+  caught up.
+
+WRITE:
+        session.minimum_version[key] = commit(write)
+
+READ:
+        return read_from_replica_at_least(key, session.minimum_version[key])
+
+6. Monotonic Reads
+
+* Return the version observed by every read.
+* Store the greatest observed version in the session.
+* Route subsequent reads to a replica at or beyond that version.
+* Never serve an older response; wait or fail when the version is unavailable.
+
+READ:
+        minimum = session.last_seen_version[key]
+        result = read_from_replica_at_least(key, minimum)
+        session.last_seen_version[key] = max(minimum, result.version)
+        return result
+
+7. Monotonic Writes
+
+* Assign each client or session an increasing sequence number.
+* Include the sequence number with every write.
+* Apply sequence N only after sequence N-1 is complete.
+* Use a leader, ordered partition, or per-key queue to serialize writes.
+
+WRITE:
+        sequence = session.next_write_sequence(key)
+        enqueue(key, sequence, value)
+
+CONSUMER:
+        wait_until(last_applied(key) == sequence - 1)
+        apply(key, value, sequence)
+
+8. Session Consistency
+
+* Create a session context containing the guarantees required by the product.
+* Track a write token, read version, write sequence, and causal dependencies.
+* Send this context with every request and update it after every response.
+* Enforce read-your-writes, monotonic reads, monotonic writes, and
+  writes-follow-reads at the storage coordinator.
+* Preserve the context when the user moves between application servers.
+
+9. Linearizability
+
+* Use one leader or a consensus protocol such as Raft or Paxos.
+* Serialize conflicting operations through the leader's committed log.
+* Acknowledge writes only after consensus commits them.
+* Make reads contact the current leader or perform a linearizable read barrier.
+* Use compare-and-set or a transaction for atomic read-modify-write actions.
+
+A quorum acknowledgement alone is insufficient if a stale replica can answer
+the following read.
+
+10. Sequential Consistency
+
+* Preserve each client's operation order with sequence numbers or a session
+  queue.
+* Assign operations from all clients to one deterministic global order, such
+  as a replicated log or sequencer.
+* Apply and expose results according to that order.
+* Real-time ordering between different clients is not required.
+
+11. Quorum Reads
+
+* Send the read to N replicas and wait for R responses.
+* Select the value with the highest valid version, or merge versions when the
+  data type supports merging.
+* Optionally repair replicas that returned older versions.
+* Choose R and W so R + W > N when read/write overlap is required.
+
+READ:
+        responses = wait_for_at_least(R, read_replicas(key))
+        latest = select_highest_version(responses)
+        repair_stale_replicas(responses, latest)
+        return latest
+
+12. Quorum Writes
+
+* Generate one version for the write at the coordinator.
+* Send the versioned value to N replicas.
+* Acknowledge only after W replicas durably store it.
+* Retry non-responding replicas and reconcile them with anti-entropy.
+
+WRITE:
+        version = coordinator.next_version(key)
+        responses = write_to_replicas(N, key, value, version)
+        if durable_successes(responses) >= W:
+                acknowledge(version)
+        else:
+                return retryable_failure()
+
+13. Read Repair
+
+* Compare versions from all replicas during a quorum read.
+* Select the authoritative version using the conflict-resolution rule.
+* Asynchronously write that version to replicas with older values.
+* Make repair idempotent and rate-limit it so reads do not overload storage.
+
+14. Anti-Entropy
+
+* Run a scheduled job that compares replica ranges or partitions.
+* Compare checksums, version maps, or Merkle-tree nodes instead of every row.
+* Descend only into mismatching ranges.
+* Exchange missing or stale records and apply them idempotently.
+* Record progress and retry interrupted synchronization.
+
+REPAIR:
+        differing_ranges = compare_hashes(replica_a, replica_b)
+        for range in differing_ranges:
+                updates = exchange_versioned_records(range)
+                apply_newer_updates(updates)
+
+Implementation Checklist
+
+For every consistency requirement, decide:
+
+1. Where is the operation ordered: leader, sequencer, partition, or client?
+2. What metadata identifies order: revision, token, sequence, or vector clock?
+3. When is a write acknowledged: local write, quorum, or committed log?
+4. Which replica may answer a read, and what minimum version is required?
+5. How are conflicts, retries, missed messages, and stale replicas repaired?
