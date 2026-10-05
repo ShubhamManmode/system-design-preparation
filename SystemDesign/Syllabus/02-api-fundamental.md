@@ -18,6 +18,18 @@ This chapter focuses on API design principles, REST concepts, and communication 
 ## 2. REST API
 
 - REST Principles
+  > 1. REST Principles
+Representational State Transfer (REST) is an architectural style designed for distributed hypermedia systems. Originally defined by Roy Fielding in his 2000 doctoral dissertation, a system is considered truly "RESTful" only if it strictly satisfies six architectural constraints:
+• Statelessness: Every request from a client must contain all the information necessary to understand and process the request. The server must not store any session context about the client.
+• Client-Server Architecture: Separates the user interface concerns (client) from the data storage concerns (server). This improves user interface portability across multiple platforms and enhances server scalability.
+• Cacheability: Responses must implicitly or explicitly define themselves as cacheable or non-cacheable. This prevents clients from reusing stale or inappropriate data while heavily reducing server overhead.
+• Uniform Interface: This is the core differentiator of REST. It mandates a standardized way to interact with the server regardless of the device type. It relies on four sub-constraints:
+	1. Identification of resources (typically via URIs).
+	2. Manipulation of resources through representations (e.g., JSON or XML payloads).
+	3. Self-descriptive messages (each message includes enough info to describe how to process it, like Content-Type).
+	4. HATEOAS (Hypermedia As The Engine Of Application State): The client should discover all available actions dynamically through hyperlinks provided in the server responses.
+• Layered System: The client cannot ordinarily tell whether it is connected directly to the end server or to an intermediary (like a load balancer, proxy, or CDN).
+• Code on Demand (Optional): Servers can temporarily extend or customize client functionality by transferring executable code (e.g., JavaScript scripts).
 - Resources
 - URI Design
 - HTTP Methods
