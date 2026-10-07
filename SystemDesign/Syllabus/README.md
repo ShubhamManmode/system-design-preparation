@@ -1,13 +1,5 @@
 # System Design — Complete Learning Roadmap
 
-> **Goal:** Learn System Design from fundamentals to senior-level HLD/LLD and become capable of designing scalable, reliable, secure distributed systems in interviews.
->
-> **Repository:** [system-design-preparation](https://github.com/ShubhamManmode/system-design-preparation)
->
-> **How to use:** Follow the phases in order. Each phase builds concepts required by the next one. Do not jump directly to case studies before understanding the building blocks.
-
----
-
 ## 0. How to Study System Design
 
 For every topic, learn:
@@ -32,8 +24,6 @@ Use this mental model:
 # Part I — Foundations
 
 ## Phase 1 — Networking & Operating Systems
-
-**Source:** `01-networking-os.md`
 
 ### Networking
 - Client-server architecture
@@ -90,8 +80,6 @@ Use this mental model:
 # Part II — API and Data Foundations
 
 ## Phase 2 — API Fundamentals & API Design
-
-**Source:** `02-api-fundamental.md`
 
 ### API fundamentals
 - API architecture
@@ -165,8 +153,6 @@ Use this mental model:
 ---
 
 ## Phase 3 — Database Fundamentals
-
-**Source:** `03-db-fundamental.md`
 
 ### Database fundamentals
 - DBMS
@@ -251,8 +237,6 @@ Use this mental model:
 # Part III — Core Distributed-System Building Blocks
 
 ## Phase 4 — Core Components
-
-**Source:** `04-core-component.md`
 
 ### Load balancing
 - Why load balancers exist
@@ -399,8 +383,6 @@ Use this mental model:
 
 ## Phase 7 — Database Scaling
 
-**Source:** `Phase5_DatabaseScaling.md`
-
 ### Scaling
 - Vertical vs horizontal scaling
 - Read scaling
@@ -453,8 +435,6 @@ Use this mental model:
 
 ## Phase 8 — Architectural Patterns
 
-**Source:** `Phase7_ArchitecturalPattern.md`
-
 Study in this order:
 
 1. Layered / N-tier
@@ -494,8 +474,6 @@ For each architecture understand:
 ---
 
 ## Phase 9 — Microservices
-
-**Source:** `Phase8_Microservices.md`
 
 ### Fundamentals
 - Benefits
@@ -558,8 +536,6 @@ For each architecture understand:
 ---
 
 ## Phase 10 — Communication Patterns
-
-**Source:** `Phase9_CommunicationPattern.md`
 
 ### Models
 - Synchronous
@@ -634,8 +610,6 @@ For each architecture understand:
 
 ## Phase 11 — Distributed Transactions & Consistency
 
-**Source:** `Phase10_DistrubutedTransaction.md`
-
 - Local vs distributed transactions
 - ACID vs BASE
 - Why distributed transactions are hard
@@ -679,8 +653,6 @@ For each architecture understand:
 # Part VII — Data-Intensive Systems
 
 ## Phase 12 — Big Data & Distributed Processing
-
-**Source:** `Phase11_BigData.md`
 
 ### Fundamentals
 - Big data
@@ -756,8 +728,6 @@ For each architecture understand:
 
 ## Phase 13 — Deployment Patterns
 
-**Source:** `Phase12_DeploymentPattern.md`
-
 - Deployment, release and rollback strategies
 - Recreate deployment
 - Rolling deployment
@@ -790,8 +760,6 @@ For each architecture understand:
 ---
 
 ## Phase 14 — Observability
-
-**Source:** `Phase13_observability.md`
 
 ### Fundamentals
 - Monitoring vs observability
@@ -850,8 +818,6 @@ For each architecture understand:
 ---
 
 ## Phase 15 — Security
-
-**Source:** `Phase14_Security.md`
 
 ### Fundamentals
 - CIA triad
