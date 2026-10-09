@@ -1,29 +1,343 @@
 Caching — Complete Topic & Pattern Roadmap
-1. Caching Fundamentals
-- What is caching?
-- Why caching?
-  - Reduce latency
-  - Reduce database load
-  - Increase throughput
-  - Reduce expensive computation
-- Cache hit vs cache miss
-- Hit ratio / miss ratio
-- Cache latency
-- Cache capacity
-- TTL
-- Eviction
-- Cacheable vs non-cacheable data
-- Hot data vs cold data
-- Read-heavy vs write-heavy workloads
-Important formula
-Cache Hit Ratio = Cache Hits / Total Requests
+
+# Caching Fundamentals
+
+Caching stores a copy of data in a faster storage layer so that future requests can be served without repeatedly accessing the slower original source, such as a database, disk, remote API, or expensive computation.
+
+A cache is usually placed between an application and its data source:
+
+```text
+Client → Application → Cache → Database / API
+                         ↑
+                    Fast copy of data
+```
+
+## Why caching?
+
+Caching is mainly used to improve performance and reduce pressure on backend systems.
+
+- **Reduce latency:** Memory-based cache lookups are usually much faster than database queries or network calls.
+- **Reduce database load:** Repeated reads can be served from the cache instead of reaching the database.
+- **Increase throughput:** Because each request consumes fewer backend resources, the system can handle more requests.
+- **Reduce expensive computation:** Results of costly calculations, API calls, or page rendering can be reused.
+- **Improve resilience:** A cache may continue serving recently cached data during temporary backend slowness, depending on the design.
+- **Reduce network traffic:** Frequently requested data does not need to travel repeatedly from a remote service.
+
+Caching is most effective for data that is read frequently, changes relatively infrequently, and can tolerate some staleness.
+
+## Cache hit and cache miss
+
+A **cache hit** occurs when the requested item is already present and usable in the cache.
+
+```text
+Request → Cache → Found
+                    ↓
+                 Return value
+```
+
+A **cache miss** occurs when the requested item is absent, expired, or otherwise unusable. The application must retrieve it from the original data source and may then store it in the cache.
+
+Typical cache-aside flow:
+
+```text
+1. Application checks the cache.
+2. If found: return the cached value.
+3. If not found: read from the database.
+4. Store the result in the cache.
+5. Return the result to the client.
+```
 
 Example:
-1,000,000 requests
-900,000 cache hits
-100,000 cache misses
 
-Hit ratio = 90%
+```python
+user = cache.get("user:42")
+
+if user is None:              # Cache miss
+    user = database.get_user(42)
+    cache.set("user:42", user, ttl=300)
+
+return user                    # Cache hit on later requests
+```
+
+A miss is slower because it often involves the database and an additional cache write. A high miss rate can also overload the database, especially when many requests miss at the same time.
+
+## Hit ratio and miss ratio
+
+The **hit ratio**, also called the hit rate, measures how often requests are successfully served by the cache:
+
+$$
+\\text{Hit ratio} =
+\\frac{\\text{cache hits}}
+{\\text{cache hits} + \\text{cache misses}}
+$$
+
+The **miss ratio** is:
+
+$$
+\\text{Miss ratio} =
+\\frac{\\text{cache misses}}
+{\\text{cache hits} + \\text{cache misses}}
+$$
+
+They are complements:
+
+$$
+\\text{Miss ratio} = 1 - \\text{Hit ratio}
+$$
+
+For example, if a cache handles 10,000 requests with 9,500 hits and 500 misses:
+
+- Hit ratio = 9,500 / 10,000 = **95%**
+- Miss ratio = 500 / 10,000 = **5%**
+
+A high hit ratio is useful, but it is not the only metric that matters. A cache could have a high hit ratio while returning stale data, consuming too much memory, or adding significant latency.
+
+## Cache latency
+
+**Cache latency** is the time required to retrieve a value from the cache.
+
+It commonly includes:
+
+- Time to serialize the request.
+- Network time between the application and cache.
+- Cache lookup time.
+- Time to deserialize the response.
+
+An in-process cache, located inside the application process, usually has lower latency than a remote cache. A remote distributed cache may still be much faster than a database query, but network overhead must be considered.
+
+A useful way to estimate average read latency is:
+
+$$
+L_{\\text{average}} =
+H \\times L_{\\text{hit}} +
+(1-H) \\times L_{\\text{miss}}
+$$
+
+where:
+
+- $H$ is the hit ratio.
+- $L_{\\text{hit}}$ is cache-hit latency.
+- $L_{\\text{miss}}$ is latency when the cache misses and the application accesses the database.
+
+Example:
+
+- Hit ratio: 95%
+- Cache-hit latency: 2 ms
+- Cache-miss latency: 100 ms
+
+$$
+L_{\\text{average}} = 0.95(2) + 0.05(100) = 6.9\\text{ ms}
+$$
+
+The average is much lower than 100 ms, but the 5% of requests that miss may still experience high latency. Therefore, tail latency, such as p95 and p99 latency, should also be monitored.
+
+## Cache capacity
+
+**Cache capacity** is the amount of data a cache can store. It is constrained by:
+
+- Available memory or disk.
+- Number of keys.
+- Average item size.
+- Key and metadata overhead.
+- Replication requirements.
+- Serialization format.
+- Reserved memory for the cache system.
+
+A cache does not usually need to store the entire database. It should store the **working set**: the subset of data requested frequently enough to benefit from caching.
+
+If the working set does not fit in memory, the cache must remove entries according to an eviction policy.
+
+Capacity planning should account for overhead:
+
+```text
+Required capacity
+≈ cached data size
++ keys and metadata
++ replication overhead
++ safety margin
+```
+
+A cache that is too small may constantly evict and reload the same data. This is called **cache churn**, and it can produce a low hit ratio while increasing database load.
+
+## TTL
+
+**TTL**, or **time to live**, specifies how long an item may remain valid in the cache.
+
+For example:
+
+```text
+cache.set("product:123", product, TTL = 300 seconds)
+```
+
+After five minutes, the entry expires and is no longer considered usable. The next request usually causes a cache miss and reloads the value from the database.
+
+TTL helps control staleness:
+
+- Short TTL: fresher data, more cache misses.
+- Long TTL: better hit ratio, greater risk of stale data.
+- No TTL: data may remain indefinitely unless explicitly invalidated or evicted.
+
+TTL expiration and eviction are different:
+
+- **Expiration:** The item becomes invalid because its TTL has elapsed.
+- **Eviction:** The cache removes an item because it needs space or follows a configured removal policy.
+
+## Eviction
+
+**Eviction** is the removal of cached data, usually because the cache has reached its capacity limit.
+
+Common eviction policies include:
+
+| Policy | Meaning | Typical use |
+|---|---|---|
+| LRU | Remove the least recently used item | General-purpose caches |
+| LFU | Remove the least frequently used item | Workloads with stable hot keys |
+| FIFO | Remove the oldest inserted item | Simple queue-like behavior |
+| Random | Remove a random item | Low-overhead fallback |
+| TTL-based | Prefer items closest to expiration | Time-sensitive data |
+| No eviction | Reject new writes when full | Systems requiring explicit capacity handling |
+
+**LRU**, or least recently used, is one of the most common policies. It assumes that recently accessed data is more likely to be accessed again.
+
+Eviction can happen even when an item has not expired. For example, an entry with a one-hour TTL might be removed after ten minutes because the cache needs room for another entry.
+
+## Cacheable and non-cacheable data
+
+### Cacheable data
+
+Data is generally a good candidate for caching when it is:
+
+- Read frequently.
+- Relatively expensive to retrieve or compute.
+- Shared across many users or requests.
+- Stable for a meaningful period.
+- Acceptable to serve slightly stale.
+- Deterministic for a given key.
+
+Examples include:
+
+- Product catalog information.
+- Public configuration.
+- Exchange rates with an appropriate freshness period.
+- Search results.
+- User profile data with controlled invalidation.
+- Expensive report results.
+- Authentication metadata.
+- Frequently accessed API responses.
+
+### Non-cacheable or risky data
+
+Caching may be inappropriate when data is:
+
+- Highly personal or confidential without strict isolation.
+- Extremely fast to retrieve directly.
+- Updated constantly.
+- Required to be strongly consistent.
+- Dependent on rapidly changing permissions.
+- Unique to a single request.
+- Large and rarely reused.
+- Unsafe to serve after expiration.
+
+Examples include:
+
+- Current account balances in a strongly consistent transaction flow.
+- One-time authentication codes.
+- Real-time inventory during a high-volume sale.
+- Payment authorization results unless carefully designed.
+- Private responses accidentally shared across users.
+- Data whose permissions change frequently.
+
+The key question is not simply “Can this data be cached?” but:
+
+> Can this data be reused safely for this key, for this period, under these consistency and privacy requirements?
+
+Cache keys must include every input that affects the result. For example, a localized product page may need a key such as:
+
+```text
+product-page:123:en-IN:mobile
+```
+
+rather than only:
+
+```text
+product-page:123
+```
+
+## Hot data and cold data
+
+**Hot data** is requested frequently. It is usually the most valuable data to keep in the cache.
+
+Examples:
+
+- A popular product page.
+- A frequently viewed user profile.
+- A trending news article.
+- A common configuration value.
+
+**Cold data** is requested rarely. Storing it may waste capacity unless retrieving it is exceptionally expensive.
+
+A cache works best when it captures the hot portion of the workload. Eviction policies try to keep hot data and remove cold data, although their effectiveness depends on the access pattern.
+
+A common access pattern is **skewed access**, where a small percentage of keys receives most requests. This is favorable for caching because a relatively small cache can serve a large share of traffic.
+
+## Read-heavy and write-heavy workloads
+
+### Read-heavy workloads
+
+A **read-heavy workload** performs many more reads than writes.
+
+Example:
+
+```text
+100,000 reads
+1,000 writes
+```
+
+Caching is usually highly effective because many requests can reuse the same values. Cache-aside is a common pattern: the application reads from the cache first, loads on a miss, and invalidates or updates the cache after writes.
+
+### Write-heavy workloads
+
+A **write-heavy workload** performs frequent updates.
+
+Caching can be more difficult because every update introduces a consistency problem:
+
+- Should the cache be updated immediately?
+- Should the entry be deleted?
+- Can readers temporarily see stale data?
+- What happens if the database update succeeds but the cache update fails?
+- What happens if updates arrive out of order?
+
+Common strategies include:
+
+- **Write-through:** Write to the cache, and the cache synchronously writes to the database.
+- **Write-back or write-behind:** Write to the cache first, then persist asynchronously.
+- **Write-around:** Write directly to the database and do not populate the cache until a later read.
+- **Invalidate-on-write:** Update the database and remove the corresponding cache entry.
+
+For frequently changing data, direct database reads or a carefully designed write-through/event-driven approach may be safer than a simple cache-aside design.
+
+## Important design trade-off
+
+Caching trades **freshness and consistency** for **speed and reduced backend work**.
+
+A practical cache design defines:
+
+- What data is cached.
+- The cache key format.
+- The TTL.
+- The invalidation strategy.
+- The maximum cache size.
+- The eviction policy.
+- Behavior during cache failure.
+- Protection against cache stampedes.
+- Privacy and authorization boundaries.
+- Metrics such as hit ratio, miss ratio, latency, memory use, expirations, and evictions.
+
+The most important foundational rule is:
+
+> Cache data that is expensive to obtain, frequently reused, and safe to serve within a defined freshness window.
+
+
 
 2. Where Can We Cache?
 Understand caching at every layer.
