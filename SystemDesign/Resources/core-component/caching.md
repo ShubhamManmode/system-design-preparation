@@ -339,33 +339,600 @@ The most important foundational rule is:
 
 
 
-2. Where Can We Cache?
-Understand caching at every layer.
-Client
-   ↓
-Browser Cache
-   ↓
-CDN / Edge Cache
-   ↓
-Load Balancer
-   ↓
-API Gateway
-   ↓
-Application
-   ↓
-Distributed Cache
-   ↓
-Database
+# Types of Caching
 
-Study:
-- Browser caching
-- HTTP caching
-- CDN caching
-- API Gateway caching
-- Application-level caching
-- Distributed caching
-- Database caching
-- DNS caching
+Caching can be implemented at several layers of a system. Each layer stores data closer to the component that needs it, reducing latency, network traffic, backend load, or repeated computation.
+
+```text
+User
+  ↓
+Browser cache
+  ↓
+DNS cache
+  ↓
+CDN / edge cache
+  ↓
+API Gateway cache
+  ↓
+Application cache
+  ↓
+Distributed cache
+  ↓
+Database cache
+  ↓
+Storage
+```
+
+A single request may pass through several of these caching layers.
+
+## Browser caching
+
+**Browser caching** stores web resources locally on the user’s device. Browsers commonly cache:
+
+- HTML documents.
+- CSS stylesheets.
+- JavaScript files.
+- Images.
+- Fonts.
+- Video fragments.
+- API responses, when permitted.
+
+When the user requests the same resource again, the browser may reuse its local copy instead of downloading it again. This reduces page-load time, bandwidth usage, and server requests. Browsers use HTTP response headers such as `Cache-Control`, `Expires`, `ETag`, and `Last-Modified` to decide whether a resource can be reused or must be validated.
+
+Example:
+
+```http
+Cache-Control: public, max-age=86400
+```
+
+This tells the browser and permitted shared caches that the response may be considered fresh for 86,400 seconds, or one day.
+
+### Browser validation
+
+A browser may have a cached copy but still ask the server whether it is current:
+
+```http
+If-None-Match: "resource-version-123"
+```
+
+If the resource has not changed, the server can return:
+
+```http
+HTTP/1.1 304 Not Modified
+```
+
+The browser then uses its existing copy instead of downloading the full response. `ETag` identifies a particular version of a resource and helps caches avoid transferring unchanged content.
+
+### Advantages
+
+- Very low latency.
+- Reduces bandwidth usage.
+- Reduces requests to the application.
+- Works without a separate cache server.
+
+### Risks
+
+- Old content may remain visible until expiration.
+- Private data may be stored on a shared device.
+- Incorrect cache headers can cause users to receive stale or user-specific content.
+
+For versioned static files, a common strategy is:
+
+```text
+app.abc123.js
+styles.def456.css
+```
+
+When the content changes, the filename changes, so the browser can safely cache the old version for a long time.
+
+## HTTP caching
+
+**HTTP caching** is the general mechanism that allows browsers, proxies, CDNs, and other intermediaries to reuse HTTP responses.
+
+HTTP caching is controlled primarily through headers:
+
+| Header | Purpose |
+|---|---|
+| `Cache-Control` | Defines caching rules and freshness duration |
+| `Expires` | Legacy expiration timestamp |
+| `ETag` | Identifies a specific resource version |
+| `Last-Modified` | Indicates when the resource was last changed |
+| `Vary` | Specifies request headers that affect the response |
+| `Age` | Indicates how long a shared cache has stored a response |
+
+`Cache-Control` can be used in both requests and responses to control browser and shared-cache behavior.
+
+Common directives:
+
+```http
+Cache-Control: public, max-age=3600
+```
+
+The response can be cached by shared caches and is fresh for one hour.
+
+```http
+Cache-Control: private, max-age=600
+```
+
+The response may be cached by a private client such as a browser, but should not be stored by a shared proxy.
+
+```http
+Cache-Control: no-store
+```
+
+The response should not be stored.
+
+```http
+Cache-Control: no-cache
+```
+
+The response may be stored, but it must be revalidated before reuse. Despite its name, `no-cache` does not necessarily mean “do not store.”
+
+### HTTP cache key
+
+An HTTP cache usually identifies an object using the request URL and sometimes other request properties. The `Vary` header tells a cache that response variants depend on specific request headers.
+
+For example:
+
+```http
+Vary: Accept-Encoding, Accept-Language
+```
+
+This indicates that compressed and uncompressed responses, or different language versions, may need separate cache entries.
+
+### HTTP caching example
+
+```text
+Client requests /logo.png
+        ↓
+HTTP cache has a fresh copy?
+        ├── Yes → Return cached image
+        └── No  → Request image from origin
+                    ↓
+                Store response
+                    ↓
+                Return image
+```
+
+## CDN caching
+
+A **Content Delivery Network**, or CDN, is a globally distributed network of edge servers. CDN caching stores copies of content at locations near users.
+
+Typical CDN-cached content includes:
+
+- Images.
+- JavaScript and CSS files.
+- Videos.
+- Downloadable files.
+- Web pages.
+- Public API responses.
+- Software packages.
+
+A CDN serves a cached object from an edge location instead of forwarding every request to the origin server. This reduces round-trip latency and decreases origin traffic.
+
+### CDN request flow
+
+```text
+User in India
+    ↓
+Nearby CDN edge
+    ├── Cache hit → Return cached response
+    └── Cache miss
+            ↓
+        Fetch from origin
+            ↓
+        Store at edge
+            ↓
+        Return to user
+```
+
+The first request at an edge may be a miss. Later requests can be hits until the object expires or is invalidated.
+
+### CDN cache controls
+
+CDNs commonly use:
+
+- Origin `Cache-Control` headers.
+- CDN-specific TTL settings.
+- URL-based cache keys.
+- Query-string rules.
+- Header-based variation.
+- Manual invalidation or purge.
+- Geographic or device-specific variants.
+
+Example:
+
+```http
+Cache-Control: public, max-age=31536000, immutable
+```
+
+This is appropriate for a versioned static asset that will not change at the same URL.
+
+### CDN benefits
+
+- Reduces latency for geographically distributed users.
+- Protects the origin from repeated requests.
+- Absorbs traffic spikes.
+- Reduces bandwidth costs at the origin.
+- Can improve availability during temporary origin problems.
+
+### CDN risks
+
+- Stale content may remain at many edge locations.
+- Cache invalidation can be complex.
+- Incorrect cache keys can expose one user’s response to another.
+- Personalized or authorization-dependent responses require careful configuration.
+
+Public content is usually a better CDN candidate than user-specific content.
+
+## API Gateway caching
+
+**API Gateway caching** stores responses produced by backend API endpoints. The gateway checks its cache before forwarding a request to the application or service.
+
+```text
+Client → API Gateway
+             ├── Cached response → Return immediately
+             └── Cache miss → Call backend → Cache response
+```
+
+API Gateway caching can reduce calls to backend services and improve API latency. For example, Amazon API Gateway supports stage-level caching and response TTLs.
+
+### API cache key
+
+The cache key must include every request attribute that changes the response.
+
+Possible key components include:
+
+- HTTP method.
+- Request path.
+- Path parameters.
+- Query parameters.
+- Selected headers.
+- Tenant or user identity, when applicable.
+- Locale or requested representation.
+
+For example:
+
+```text
+GET /products?category=books&page=2
+```
+
+should not share a cache entry with:
+
+```text
+GET /products?category=electronics&page=2
+```
+
+If a response depends on the authenticated user, a shared cache must not return one user’s response to another user. The user or tenant identity may need to be included in the key, or the endpoint may need to bypass shared caching.
+
+### Good API caching candidates
+
+- Public product lists.
+- Exchange-rate data with an acceptable freshness window.
+- Search suggestions.
+- Read-only reference data.
+- Public configuration.
+- Expensive reports.
+- Frequently requested metadata.
+
+### Poor API caching candidates
+
+- Payment operations.
+- One-time operations.
+- Real-time account balances.
+- Highly personalized responses.
+- Frequently changing inventory.
+- Endpoints with side effects.
+
+API Gateway caches are most effective when many requests repeat the same inputs and the response can safely be reused.
+
+## Application-level caching
+
+**Application-level caching** is caching implemented and controlled by application code.
+
+The application decides:
+
+- What to cache.
+- How to construct keys.
+- How long values remain valid.
+- When to invalidate entries.
+- How to handle misses and failures.
+- Whether cached data is local or shared.
+
+Example:
+
+```python
+def get_product(product_id):
+    key = f"product:{product_id}"
+
+    product = cache.get(key)
+    if product is not None:
+        return product
+
+    product = database.fetch_product(product_id)
+    cache.set(key, product, ttl=600)
+    return product
+```
+
+This is the cache-aside pattern.
+
+### Common application cache contents
+
+- Database query results.
+- Computed objects.
+- Rendered HTML fragments.
+- Permission checks.
+- Feature flags.
+- Session-related metadata.
+- External API responses.
+- Expensive aggregations.
+
+### Local application cache
+
+A local cache exists inside the application process.
+
+```text
+Application server A → Local memory
+Application server B → Local memory
+Application server C → Local memory
+```
+
+Advantages:
+
+- Extremely low latency.
+- No network call to retrieve cached data.
+- Simple to implement.
+
+Disadvantages:
+
+- Each server has a separate copy.
+- Memory is limited to one process.
+- Values may become inconsistent across servers.
+- Restarting the process can remove the cache.
+- Cache warming may need to happen separately on every server.
+
+Local caching is useful for small, stable, read-mostly data such as configuration or compiled templates.
+
+## Distributed caching
+
+**Distributed caching** stores cached data in a cache system shared by multiple application instances.
+
+```text
+Application server A ─┐
+Application server B ─┼──→ Shared distributed cache
+Application server C ─┘
+```
+
+Common distributed cache technologies include Redis, Memcached, and managed cloud cache services.
+
+A distributed cache allows multiple application servers to reuse the same entries. In a distributed environment, cached data may span multiple cache servers and be shared by consumers across the application fleet.
+
+### Advantages
+
+- Shared cache across application instances.
+- More available memory than a single process.
+- Better consistency than independent local caches.
+- Supports horizontal scaling.
+- Can provide replication and failover.
+- Useful for shared sessions and rate limits.
+
+### Costs and risks
+
+- Network latency is higher than local memory access.
+- The cache becomes an infrastructure dependency.
+- Distributed failures and partitions must be handled.
+- Serialization and deserialization add overhead.
+- Hot keys can overload one cache node.
+- Invalidation becomes more important.
+
+### Common distributed-cache uses
+
+- User sessions.
+- Product and catalog data.
+- Rate-limiting counters.
+- Distributed locks.
+- Frequently executed database queries.
+- API response caching.
+- Shared feature flags.
+- Short-lived tokens or metadata.
+
+### Cache stampede
+
+A **cache stampede** occurs when a popular item expires and many requests try to rebuild it at the same time.
+
+Possible protections include:
+
+- Request coalescing.
+- Locks around cache population.
+- Early refresh.
+- Randomized TTL values.
+- Serving stale data temporarily.
+- Prewarming important keys.
+
+For example, instead of giving 10,000 requests permission to query the database after one key expires, the system can allow one request to refresh the key while the others wait or use a stale copy.
+
+## Database caching
+
+**Database caching** stores frequently accessed database data in faster memory or a cache layer.
+
+Database caching can exist at multiple levels:
+
+- Database buffer pool.
+- Query-result cache.
+- Index pages in memory.
+- Operating-system file cache.
+- Application-managed query cache.
+- External key-value cache.
+
+A database buffer pool keeps frequently accessed table and index pages in memory, reducing physical disk reads.
+
+### Database buffer caching
+
+```text
+SQL query
+   ↓
+Database buffer pool
+   ├── Page found → Read from memory
+   └── Page absent → Read from disk, then cache page
+```
+
+This is generally transparent to the application. The database decides which pages to keep and evict.
+
+### Application query caching
+
+An application may cache the result of an expensive query:
+
+```python
+key = "top-products:2026-10-09"
+
+result = cache.get(key)
+
+if result is None:
+    result = database.query_top_products()
+    cache.set(key, result, ttl=300)
+```
+
+This can be highly effective for repeated read queries, but invalidation is difficult when the underlying tables change.
+
+### Database caching considerations
+
+Caching query results is safer when:
+
+- The query is expensive.
+- The same query is repeated frequently.
+- Data changes relatively infrequently.
+- A small amount of staleness is acceptable.
+- Cache keys include all query parameters.
+- Updates can trigger invalidation.
+
+It is risky when:
+
+- Strong consistency is required.
+- Queries depend on the current user.
+- Permissions change frequently.
+- Results are highly unique.
+- Write volume is high.
+- The query is already inexpensive.
+
+Database caching should not be used as a substitute for proper indexes, query optimization, partitioning, or capacity planning. If the query itself is inefficient, caching may hide the problem temporarily without fixing it.
+
+## DNS caching
+
+**DNS caching** stores domain-name-to-IP-address mappings.
+
+When a client requests:
+
+```text
+api.example.com
+```
+
+DNS resolution may return an IP address from a nearby or previously queried cache instead of contacting the authoritative DNS server every time.
+
+```text
+Client
+  ↓
+Operating-system DNS cache
+  ↓
+Browser DNS cache
+  ↓
+Recursive resolver cache
+  ↓
+Authoritative DNS server
+```
+
+DNS caching reduces:
+
+- DNS lookup latency.
+- Queries to authoritative DNS servers.
+- Network traffic.
+- Load on DNS infrastructure.
+
+### DNS TTL
+
+DNS records include a TTL that specifies how long a resolver may cache the record.
+
+Example:
+
+```text
+api.example.com → 203.0.113.10
+TTL: 300 seconds
+```
+
+A short TTL allows changes to propagate more quickly but causes more DNS lookups. A long TTL reduces DNS traffic and lookup latency but means changes may take longer to reach users.
+
+### DNS cache limitations
+
+- DNS changes are not always visible immediately.
+- Different resolvers may refresh at different times.
+- A low TTL does not guarantee instant propagation.
+- Cached DNS data may direct clients to an old server.
+- DNS caching does not cache the HTTP response itself.
+
+DNS caching only caches the result of name resolution. CDN or HTTP caching handles the actual web content.
+
+## How the layers work together
+
+Suppose a user requests a public product page:
+
+```text
+1. Browser checks its local cache.
+2. DNS cache resolves the application hostname.
+3. CDN checks its edge cache.
+4. API Gateway checks its response cache.
+5. Application checks its local or distributed cache.
+6. Database checks its buffer pool.
+7. Storage is accessed only if necessary.
+```
+
+The request may be served at any layer:
+
+```text
+Browser hit     → fastest for that user
+DNS hit         → avoids repeated name resolution
+CDN hit         → avoids origin network and processing
+Gateway hit     → avoids backend API execution
+App-cache hit   → avoids database access
+DB-cache hit    → avoids disk access
+Storage access  → slowest path
+```
+
+Each layer has a separate cache key, TTL, invalidation mechanism, and consistency model. A stale value at an outer layer can prevent newer data from being observed even if inner layers have already been updated.
+
+## Comparison of caching layers
+
+| Cache type | Location | Main benefit | Typical data | Main concern |
+|---|---|---|---|---|
+| Browser cache | User device | Lowest latency for repeat visits | Static assets and permitted responses | Stale or private data |
+| HTTP cache | Browser, proxy, or shared intermediary | Standard response reuse | HTTP resources | Correct headers and validators |
+| CDN cache | Global edge servers | Lower geographic latency | Static and public content | Invalidation and cache-key safety |
+| API Gateway cache | API entry point | Fewer backend API calls | Read-only API responses | Personalized responses |
+| Application cache | Application process or service | Flexible business-aware caching | Computed objects and query results | Invalidation logic |
+| Distributed cache | Shared cache cluster | Reuse across application servers | Sessions, objects, counters | Network failures and hot keys |
+| Database cache | Database memory layer | Fewer disk reads | Pages, indexes, query data | Memory pressure and query behavior |
+| DNS cache | Client and DNS resolvers | Faster hostname resolution | Domain-to-IP mappings | Delayed DNS changes |
+
+## Choosing the right layer
+
+Use **browser or HTTP caching** for public static resources that can be reused by the client.
+
+Use a **CDN** for content requested by users in different geographic regions, especially large or public assets.
+
+Use **API Gateway caching** for repeated, read-only API calls with predictable keys and controlled freshness.
+
+Use **application caching** when the application understands the business rules and needs to cache computed or domain-specific results.
+
+Use a **distributed cache** when several application instances need a shared, low-latency data layer.
+
+Use **database caching** to reduce repeated disk access or repeated expensive query execution, but continue optimizing queries and indexes.
+
+Use **DNS caching** to reduce repeated domain-name resolution; it should not be treated as a replacement for HTTP or application caching.
+
+The central design rule is:
+
+> Cache each piece of data at the closest safe layer where it can be reused, while defining its TTL, invalidation behavior, privacy boundaries, and acceptable staleness.
+
+
+ 
 3. Cache Types
 Local / In-Memory Cache
 Application Instance
