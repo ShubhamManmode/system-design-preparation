@@ -3565,58 +3565,7 @@ The key principle is:
 
 
 
-13. Cache Breakdown / Hot Key Problem ⭐⭐⭐
-One extremely popular key.
-Example:
-Taylor Swift concert
-
-or
-Product ID = 123
-
-Millions of requests:
-         ┌── Request
-         ├── Request
-         ├── Request
-         ├── Request
-         ↓
-     SAME CACHE KEY
-
-This creates a hot key.
-Solutions:
-- Replicate hot key
-- Local cache
-- Key replication
-- Request coalescing
-- Sharding
-- CDN
-- Refresh-ahead
-14. Cache Avalanche ⭐⭐⭐
-Large numbers of keys expire simultaneously.
-10:00 AM
-
-Key A → expire
-Key B → expire
-Key C → expire
-Key D → expire
-...
-
-Suddenly:
-Cache ↓↓↓
-
-DB ↑↑↑
-
-Solutions
-Randomized TTL
-Instead of:
-TTL = 60 min
-
-Use:
-TTL = 60 min + random(0–10 min)
-
-Staggered expiration
-Refresh-ahead
-Multiple cache layers
-15. Cache Consistency ⭐⭐⭐
+### 15. Cache Consistency ⭐⭐⭐
 Critical system-design topic.
 Consider:
 DB:
@@ -3632,13 +3581,16 @@ but Redis still:
 ₹1000
 
 Now stale data is served.
+
 Study:
 - Strong consistency
 - Eventual consistency
 - Stale-while-revalidate
 - Cache invalidation
 - Cache update ordering
-16. DB + Cache Update Strategies
+
+
+### 16. DB + Cache Update Strategies
 Strategy 1
 DB update
  ↓
@@ -3671,7 +3623,8 @@ Kafka
 Cache updater
 
 Useful at very large scale.
-17. Cache Serialization
+
+### 17. Cache Serialization
 Understand how objects are stored.
 .NET Object
     ↓
@@ -3690,7 +3643,7 @@ Protobuf	Low	High	Low
 MessagePack	Low	High	Low
 
 
-18. Cache Key Design ⭐⭐
+### 18. Cache Key Design ⭐⭐
 Very important in Redis.
 Bad:
 123
@@ -3714,7 +3667,7 @@ Think about:
 Example:
 v2:tenant:123:user:456
 
-19. Cache Sharding ⭐⭐⭐
+### 19. Cache Sharding ⭐⭐⭐
 One Redis server isn't enough.
              Redis Cluster
           /       |       \
@@ -3728,33 +3681,7 @@ Study:
 - Data distribution
 - Rebalancing
 - Hot partitions
-20. Redis Architecture ⭐⭐⭐
-For system design, learn:
-Redis
- ├── Strings
- ├── Hashes
- ├── Lists
- ├── Sets
- ├── Sorted Sets
- ├── Streams
- └── Pub/Sub
-
-Important concepts:
-- TTL
-- Persistence
-- RDB
-- AOF
-- Replication
-- Sentinel
-- Cluster
-- Sharding
-- Failover
-- Memory management
-- Eviction
-- Transactions
-- Lua scripts
-- Distributed locks
-21. Multi-Level Cache ⭐⭐⭐
+### 21. Multi-Level Cache ⭐⭐⭐
 Very useful architecture.
              Request
                 ↓
@@ -3779,60 +3706,9 @@ Benefits:
 - Reduced DB load
 Challenge:
 Consistency between L1 and L2.
-22. CDN Caching ⭐⭐⭐
-For static or geographically distributed content.
-User
- ↓
-Nearest CDN
- ↓
-Origin Server
 
-Study:
-- Edge caching
-- Cache-Control
-- max-age
-- s-maxage
-- ETag
-- Last-Modified
-- Cache purge
-- Cache invalidation
-- Origin shield
-23. HTTP Caching
-Learn:
-Cache-Control
-ETag
-Last-Modified
-Expires
-If-None-Match
-If-Modified-Since
 
-Example:
-Cache-Control: public, max-age=3600
-
-Browser can serve the response without hitting your server.
-24. Distributed Cache Failure ⭐⭐⭐
-What if Redis goes down?
-Don't let:
-Redis DOWN
-    ↓
-Every request
-    ↓
-Database
-    ↓
-DB DOWN
-
-This is a cascading failure.
-Study:
-- Fail-open
-- Fail-closed
-- Local fallback
-- Circuit breaker
-- Rate limiting
-- Cache warm-up
-- Redis replication
-- Redis Sentinel
-- Redis Cluster
-25. Cache Warming
+### 25. Cache Warming
 After deployment:
 Application starts
        ↓
@@ -3854,7 +3730,8 @@ Useful after:
 - Redis restart
 - Disaster recovery
 - Cache flush
-26. Cache Observability ⭐⭐
+
+### 26. Cache Observability ⭐⭐
 Monitor:
 Cache hit ratio
 Cache miss ratio
@@ -3903,27 +3780,8 @@ Bloom Filter
 Definitely doesn't exist → reject
 Maybe exists → Cache/DB
 
-28. The 3 Problems You Must Know
-For interviews, memorize this mental model:
-             CACHE PROBLEMS
-                   |
-       ┌───────────┼───────────┐
-       ↓           ↓           ↓
-   Stampede    Penetration   Avalanche
-       |           |           |
- Same key       Fake keys    Many keys
- expires        repeatedly   expire
-       |           |           |
-   Lock         Negative     Random TTL
-   Coalesce     caching      Refresh
-   Refresh      Bloom        Ahead
 
-And separately:
-Hot Key / Cache Breakdown
-        ↓
-One key receives massive traffic
-
-Recommended Learning Sequence
+### Recommended Learning Sequence
 For your system-design preparation, I'd put caching in this exact order:
 01. What is caching?
 02. Cache hit / miss / hit ratio
@@ -3953,29 +3811,3 @@ For your system-design preparation, I'd put caching in this exact order:
 26. Bloom Filter
 27. Cache observability
 28. Real-world system designs
-
-Then practice these 6 designs
-1. URL Shortener → Redis + cache-aside
-2. Product Catalog → cache invalidation + CDN
-3. News Feed → hot keys + caching
-4. Rate Limiter → Redis
-5. Ticket/Seat Booking → cache consistency + locking
-6. Transaction History → multi-level cache + Redis + DB
-For your 1M requests/sec transaction-history design, caching is especially important because you have a read-heavy workload. The architecture I'd expect you to reason through is roughly:
-                 Users
-                   ↓
-              CDN / LB
-                   ↓
-              API Gateway
-                   ↓
-            Order/Transaction API
-                   ↓
-              L1 Local Cache
-                   ↓ miss
-                Redis
-                   ↓ miss
-            Transaction DB
-                   ↓
-            Redis population
-                   ↓
-            Response
